@@ -1326,11 +1326,14 @@ footer {
       <div style="position:relative;">
         <div id="map"></div>
         <div class="map-legend">
-          <h4>Affordability</h4>
+          <h4>Income Level</h4>
+          <div class="legend-item"><span class="legend-color" style="background:#15803d;"></span> Very Affordable</div>
           <div class="legend-item"><span class="legend-color" style="background:#22c55e;"></span> Affordable</div>
+          <div class="legend-item"><span class="legend-color" style="background:#84cc16;"></span> Moderate-Low</div>
           <div class="legend-item"><span class="legend-color" style="background:#eab308;"></span> Moderate</div>
-          <div class="legend-item"><span class="legend-color" style="background:#ef4444;"></span> Expensive</div>
-          <div class="legend-item"><span class="legend-color" style="background:#7c3aed;"></span> Very Expensive</div>
+          <div class="legend-item"><span class="legend-color" style="background:#f97316;"></span> Expensive</div>
+          <div class="legend-item"><span class="legend-color" style="background:#ef4444;"></span> Very Expensive</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid #e8e4dd;font-size:11px;color:#8a8070;">Zoom in to see listings</div>
         </div>
       </div>
     </div>
@@ -1658,191 +1661,361 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// ─── SAMPLE GEOJSON DATA ───
-const areas = [
-  // NEW YORK CITY AREA
-  { name: "South Bronx", coords: [40.82, -73.92], income: 28500, rent: 1150, score: 72, level: "affordable", r: 0.14 },
-  { name: "East Harlem", coords: [40.795, -73.943], income: 32000, rent: 1400, score: 65, level: "affordable", r: 0.10 },
-  { name: "Midtown Manhattan", coords: [40.755, -73.985], income: 95000, rent: 3800, score: 18, level: "very-expensive", r: 0.08 },
-  { name: "Upper East Side", coords: [40.774, -73.957], income: 120000, rent: 3200, score: 22, level: "expensive", r: 0.09 },
-  { name: "Williamsburg", coords: [40.714, -73.953], income: 68000, rent: 2600, score: 35, level: "expensive", r: 0.08 },
-  { name: "East New York", coords: [40.659, -73.882], income: 31000, rent: 1200, score: 74, level: "affordable", r: 0.12 },
-  { name: "Jackson Heights", coords: [40.749, -73.883], income: 42000, rent: 1550, score: 62, level: "moderate", r: 0.10 },
-  { name: "Astoria", coords: [40.772, -73.83], income: 55000, rent: 1900, score: 48, level: "moderate", r: 0.09 },
-  { name: "Staten Island", coords: [40.58, -74.15], income: 72000, rent: 1450, score: 58, level: "moderate", r: 0.15 },
-  { name: "Jersey City", coords: [40.72, -74.08], income: 65000, rent: 2100, score: 38, level: "moderate", r: 0.10 },
-  // LOS ANGELES AREA
-  { name: "South LA", coords: [33.94, -118.28], income: 30000, rent: 1100, score: 70, level: "affordable", r: 0.16 },
-  { name: "Compton", coords: [33.82, -118.22], income: 35000, rent: 1250, score: 68, level: "affordable", r: 0.12 },
-  { name: "Beverly Hills", coords: [34.073, -118.4], income: 135000, rent: 3500, score: 15, level: "very-expensive", r: 0.08 },
-  { name: "Santa Monica", coords: [34.02, -118.52], income: 85000, rent: 2800, score: 28, level: "expensive", r: 0.10 },
-  { name: "East LA", coords: [34.024, -118.13], income: 34000, rent: 1180, score: 71, level: "affordable", r: 0.12 },
-  { name: "Inglewood", coords: [33.96, -118.38], income: 40000, rent: 1400, score: 60, level: "moderate", r: 0.10 },
-  { name: "Koreatown", coords: [34.058, -118.30], income: 38000, rent: 1550, score: 55, level: "moderate", r: 0.08 },
-  { name: "Long Beach", coords: [33.78, -118.15], income: 52000, rent: 1600, score: 52, level: "moderate", r: 0.14 },
-  { name: "Pasadena", coords: [34.15, -118.14], income: 75000, rent: 2100, score: 34, level: "expensive", r: 0.10 },
-  { name: "Palmdale", coords: [34.58, -118.12], income: 48000, rent: 1300, score: 65, level: "affordable", r: 0.18 },
-  // CHICAGO AREA
-  { name: "South Side Chicago", coords: [41.72, -87.62], income: 27000, rent: 900, score: 78, level: "affordable", r: 0.16 },
-  { name: "Pilsen", coords: [41.856, -87.66], income: 38000, rent: 1200, score: 66, level: "affordable", r: 0.08 },
-  { name: "Lincoln Park", coords: [41.921, -87.649], income: 90000, rent: 2100, score: 30, level: "expensive", r: 0.08 },
-  { name: "Loop", coords: [41.882, -87.629], income: 85000, rent: 2400, score: 25, level: "expensive", r: 0.06 },
-  { name: "Humboldt Park", coords: [41.902, -87.72], income: 33000, rent: 1050, score: 72, level: "affordable", r: 0.10 },
-  { name: "Rogers Park", coords: [42.01, -87.67], income: 42000, rent: 1150, score: 64, level: "moderate", r: 0.08 },
-  { name: "Cicero", coords: [41.85, -87.76], income: 36000, rent: 1000, score: 70, level: "affordable", r: 0.10 },
-  { name: "Evanston", coords: [42.05, -87.69], income: 68000, rent: 1600, score: 45, level: "moderate", r: 0.08 },
-  // HOUSTON AREA
-  { name: "Third Ward Houston", coords: [29.72, -95.36], income: 26000, rent: 850, score: 80, level: "affordable", r: 0.14 },
-  { name: "Sharpstown", coords: [29.69, -95.56], income: 33000, rent: 950, score: 75, level: "affordable", r: 0.12 },
-  { name: "River Oaks", coords: [29.76, -95.43], income: 150000, rent: 3200, score: 12, level: "very-expensive", r: 0.08 },
-  { name: "The Heights", coords: [29.80, -95.40], income: 72000, rent: 1800, score: 42, level: "moderate", r: 0.10 },
-  { name: "Alief", coords: [29.71, -95.62], income: 35000, rent: 900, score: 76, level: "affordable", r: 0.12 },
-  { name: "Katy", coords: [29.79, -95.82], income: 82000, rent: 1500, score: 50, level: "moderate", r: 0.15 },
-  { name: "Pasadena TX", coords: [29.69, -95.17], income: 42000, rent: 1050, score: 68, level: "affordable", r: 0.14 },
-  // ATLANTA AREA
-  { name: "East Point", coords: [33.68, -84.44], income: 32000, rent: 1000, score: 73, level: "affordable", r: 0.12 },
-  { name: "Buckhead", coords: [33.84, -84.37], income: 110000, rent: 2400, score: 20, level: "very-expensive", r: 0.10 },
-  { name: "Midtown Atlanta", coords: [33.785, -84.385], income: 65000, rent: 1800, score: 40, level: "moderate", r: 0.08 },
-  { name: "College Park", coords: [33.65, -84.45], income: 29000, rent: 950, score: 76, level: "affordable", r: 0.10 },
-  { name: "Decatur", coords: [33.77, -84.30], income: 58000, rent: 1400, score: 52, level: "moderate", r: 0.10 },
-  { name: "Marietta", coords: [33.95, -84.55], income: 52000, rent: 1250, score: 60, level: "moderate", r: 0.12 },
-  // PHOENIX AREA
-  { name: "South Phoenix", coords: [33.35, -112.08], income: 30000, rent: 900, score: 77, level: "affordable", r: 0.16 },
-  { name: "Scottsdale", coords: [33.55, -111.88], income: 95000, rent: 2200, score: 25, level: "expensive", r: 0.14 },
-  { name: "Maryvale", coords: [33.50, -112.22], income: 32000, rent: 950, score: 74, level: "affordable", r: 0.12 },
-  { name: "Tempe", coords: [33.42, -111.94], income: 48000, rent: 1350, score: 58, level: "moderate", r: 0.10 },
-  { name: "Mesa", coords: [33.42, -111.74], income: 52000, rent: 1200, score: 62, level: "moderate", r: 0.15 },
-  { name: "Glendale AZ", coords: [33.54, -112.18], income: 44000, rent: 1100, score: 66, level: "affordable", r: 0.12 },
-  // MIAMI AREA
-  { name: "Little Havana", coords: [25.77, -80.24], income: 28000, rent: 1200, score: 62, level: "moderate", r: 0.08 },
-  { name: "Miami Beach", coords: [25.82, -80.13], income: 80000, rent: 2800, score: 20, level: "very-expensive", r: 0.10 },
-  { name: "Overtown", coords: [25.79, -80.21], income: 22000, rent: 1050, score: 68, level: "affordable", r: 0.06 },
-  { name: "Hialeah", coords: [25.87, -80.30], income: 34000, rent: 1300, score: 60, level: "moderate", r: 0.12 },
-  { name: "Homestead", coords: [25.47, -80.48], income: 32000, rent: 1100, score: 70, level: "affordable", r: 0.15 },
-  { name: "Fort Lauderdale", coords: [26.12, -80.14], income: 55000, rent: 1800, score: 38, level: "expensive", r: 0.12 },
-  { name: "Hollywood FL", coords: [26.01, -80.15], income: 45000, rent: 1500, score: 50, level: "moderate", r: 0.10 },
-  // SEATTLE AREA
-  { name: "Rainier Valley", coords: [47.54, -122.29], income: 45000, rent: 1500, score: 55, level: "moderate", r: 0.10 },
-  { name: "Capitol Hill", coords: [47.625, -122.32], income: 72000, rent: 2100, score: 32, level: "expensive", r: 0.06 },
-  { name: "White Center", coords: [47.50, -122.36], income: 38000, rent: 1300, score: 65, level: "affordable", r: 0.08 },
-  { name: "Bellevue", coords: [47.61, -122.20], income: 110000, rent: 2600, score: 18, level: "very-expensive", r: 0.12 },
-  { name: "Tacoma", coords: [47.25, -122.44], income: 42000, rent: 1200, score: 64, level: "moderate", r: 0.14 },
-  { name: "Kent", coords: [47.38, -122.23], income: 48000, rent: 1350, score: 60, level: "moderate", r: 0.10 },
-  // DENVER AREA
-  { name: "Montbello", coords: [39.78, -104.82], income: 38000, rent: 1200, score: 67, level: "affordable", r: 0.10 },
-  { name: "Cherry Creek", coords: [39.72, -104.95], income: 100000, rent: 2400, score: 22, level: "expensive", r: 0.08 },
-  { name: "Aurora", coords: [39.73, -104.75], income: 42000, rent: 1350, score: 62, level: "moderate", r: 0.12 },
-  { name: "Lakewood", coords: [39.71, -105.10], income: 56000, rent: 1400, score: 55, level: "moderate", r: 0.10 },
-  { name: "Commerce City", coords: [39.83, -104.93], income: 40000, rent: 1200, score: 66, level: "affordable", r: 0.10 },
-  // DETROIT AREA
-  { name: "East Detroit", coords: [42.40, -82.95], income: 22000, rent: 700, score: 85, level: "affordable", r: 0.16 },
-  { name: "Corktown", coords: [42.335, -83.065], income: 52000, rent: 1300, score: 55, level: "moderate", r: 0.06 },
-  { name: "Dearborn", coords: [42.31, -83.21], income: 48000, rent: 1100, score: 64, level: "moderate", r: 0.10 },
-  { name: "Southfield", coords: [42.47, -83.24], income: 45000, rent: 1000, score: 67, level: "affordable", r: 0.12 },
-  { name: "Warren", coords: [42.49, -83.01], income: 42000, rent: 950, score: 70, level: "affordable", r: 0.12 },
-  // DALLAS-FORT WORTH
-  { name: "South Dallas", coords: [32.72, -96.78], income: 28000, rent: 900, score: 75, level: "affordable", r: 0.14 },
-  { name: "Highland Park", coords: [32.83, -96.80], income: 130000, rent: 3000, score: 15, level: "very-expensive", r: 0.08 },
-  { name: "Arlington TX", coords: [32.74, -97.11], income: 52000, rent: 1200, score: 60, level: "moderate", r: 0.14 },
-  { name: "Fort Worth", coords: [32.75, -97.33], income: 48000, rent: 1100, score: 64, level: "moderate", r: 0.16 },
-  { name: "Irving", coords: [32.86, -96.97], income: 50000, rent: 1250, score: 58, level: "moderate", r: 0.10 },
-  { name: "Garland", coords: [32.91, -96.64], income: 46000, rent: 1100, score: 65, level: "affordable", r: 0.12 },
-  // SAN FRANCISCO BAY AREA
-  { name: "Tenderloin SF", coords: [37.78, -122.41], income: 25000, rent: 1800, score: 30, level: "expensive", r: 0.06 },
-  { name: "Oakland", coords: [37.80, -122.27], income: 52000, rent: 1900, score: 40, level: "moderate", r: 0.12 },
-  { name: "Palo Alto", coords: [37.44, -122.16], income: 140000, rent: 3200, score: 12, level: "very-expensive", r: 0.10 },
-  { name: "San Jose", coords: [37.34, -121.89], income: 85000, rent: 2300, score: 30, level: "expensive", r: 0.14 },
-  { name: "Richmond CA", coords: [37.94, -122.35], income: 55000, rent: 1700, score: 48, level: "moderate", r: 0.10 },
-  { name: "Fremont", coords: [37.55, -121.98], income: 110000, rent: 2500, score: 25, level: "expensive", r: 0.12 },
-  // WASHINGTON DC
-  { name: "SE Washington", coords: [38.86, -76.98], income: 35000, rent: 1300, score: 62, level: "moderate", r: 0.10 },
-  { name: "Georgetown", coords: [38.91, -77.07], income: 120000, rent: 3000, score: 16, level: "very-expensive", r: 0.06 },
-  { name: "Silver Spring", coords: [39.00, -77.03], income: 65000, rent: 1700, score: 48, level: "moderate", r: 0.10 },
-  { name: "Alexandria", coords: [38.81, -77.05], income: 85000, rent: 2100, score: 32, level: "expensive", r: 0.10 },
-  { name: "PG County", coords: [38.83, -76.85], income: 58000, rent: 1400, score: 55, level: "moderate", r: 0.14 },
-];
-
-const colorMap = {
-  "affordable": { fill: "#22c55e", border: "#16a34a" },
-  "moderate": { fill: "#eab308", border: "#ca8a04" },
-  "expensive": { fill: "#ef4444", border: "#dc2626" },
-  "very-expensive": { fill: "#7c3aed", border: "#6d28d9" }
-};
-
-const scoreClass = (s) => s >= 60 ? "score-high" : s >= 35 ? "score-mid" : "score-low";
-const scoreLabel = (s) => s >= 60 ? "Affordable" : s >= 35 ? "Moderate" : "Expensive";
-
-function makePolygon(lat, lng, radius, sides = 6) {
-  const coords = [];
-  for (let i = 0; i < sides; i++) {
-    const angle = (Math.PI * 2 * i) / sides - Math.PI / 6;
-    coords.push([
-      lat + radius * Math.cos(angle),
-      lng + radius * 1.3 * Math.sin(angle)
-    ]);
-  }
-  coords.push(coords[0]);
-  return coords;
+// ─── FULL CHOROPLETH GRID (covers entire US like Map AI) ───
+// Seeded random for consistent colors
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
 }
 
-areas.forEach(area => {
-  const colors = colorMap[area.level];
-  const poly = L.polygon(makePolygon(area.coords[0], area.coords[1], area.r), {
-    color: colors.border,
-    fillColor: colors.fill,
-    fillOpacity: 0.45,
-    weight: 2,
-    opacity: 0.8
-  }).addTo(map);
+// Income data points for major metro influence (affects nearby grid cells)
+const metroInfluence = [
+  // [lat, lng, incomeLevel 0-1 where 0=low income, 1=high income, radius of influence]
+  // NYC
+  [40.76, -73.97, 0.95, 0.15],  // Midtown Manhattan - very high
+  [40.71, -74.01, 0.90, 0.10],  // Financial District
+  [40.78, -73.96, 0.92, 0.12],  // Upper East Side
+  [40.82, -73.92, 0.20, 0.12],  // South Bronx - low
+  [40.66, -73.88, 0.22, 0.14],  // East Brooklyn - low
+  [40.75, -73.88, 0.45, 0.10],  // Jackson Heights - mid
+  [40.58, -74.15, 0.55, 0.12],  // Staten Island
+  // LA
+  [34.07, -118.40, 0.95, 0.12],  // Beverly Hills
+  [34.02, -118.49, 0.85, 0.10],  // Santa Monica
+  [33.94, -118.28, 0.15, 0.16],  // South LA - low
+  [33.90, -118.22, 0.18, 0.12],  // Compton
+  [34.06, -118.30, 0.35, 0.08],  // Koreatown
+  [33.78, -118.20, 0.50, 0.12],  // Long Beach
+  [34.15, -118.14, 0.70, 0.10],  // Pasadena
+  // Chicago
+  [41.88, -87.63, 0.82, 0.10],  // Loop
+  [41.92, -87.65, 0.85, 0.08],  // Lincoln Park
+  [41.74, -87.62, 0.12, 0.16],  // South Side - low
+  [41.90, -87.72, 0.20, 0.10],  // Humboldt Park
+  [42.05, -87.69, 0.65, 0.08],  // Evanston
+  // Houston
+  [29.76, -95.43, 0.95, 0.10],  // River Oaks
+  [29.72, -95.36, 0.15, 0.12],  // Third Ward
+  [29.71, -95.58, 0.22, 0.14],  // Alief
+  [29.80, -95.40, 0.60, 0.10],  // Heights
+  // Atlanta
+  [33.84, -84.37, 0.90, 0.10],  // Buckhead
+  [33.68, -84.44, 0.20, 0.12],  // East Point
+  [33.78, -84.39, 0.55, 0.08],  // Midtown
+  [33.95, -84.55, 0.50, 0.10],  // Marietta
+  // Phoenix
+  [33.50, -111.90, 0.85, 0.14],  // Scottsdale
+  [33.38, -112.08, 0.18, 0.14],  // South Phoenix
+  [33.50, -112.20, 0.22, 0.10],  // Maryvale
+  [33.42, -111.94, 0.50, 0.10],  // Tempe
+  // Miami
+  [25.82, -80.13, 0.88, 0.10],  // Miami Beach
+  [25.77, -80.23, 0.25, 0.08],  // Little Havana
+  [25.87, -80.30, 0.30, 0.10],  // Hialeah
+  [26.12, -80.14, 0.60, 0.10],  // Fort Lauderdale
+  // Seattle
+  [47.62, -122.20, 0.90, 0.12],  // Bellevue
+  [47.63, -122.32, 0.70, 0.06],  // Capitol Hill
+  [47.51, -122.35, 0.30, 0.08],  // White Center
+  [47.25, -122.44, 0.40, 0.12],  // Tacoma
+  // Denver
+  [39.72, -104.95, 0.85, 0.08],  // Cherry Creek
+  [39.78, -104.84, 0.35, 0.10],  // Montbello
+  [39.73, -104.80, 0.40, 0.10],  // Aurora
+  // Detroit
+  [42.35, -83.05, 0.15, 0.16],  // Detroit core - low
+  [42.47, -83.24, 0.45, 0.10],  // Southfield
+  [42.33, -83.18, 0.50, 0.08],  // Dearborn
+  // Dallas
+  [32.83, -96.80, 0.92, 0.08],  // Highland Park
+  [32.72, -96.78, 0.18, 0.12],  // South Dallas
+  [32.75, -97.33, 0.45, 0.14],  // Fort Worth
+  // SF Bay
+  [37.79, -122.40, 0.90, 0.08],  // Financial District
+  [37.80, -122.27, 0.40, 0.10],  // Oakland
+  [37.44, -122.16, 0.95, 0.10],  // Palo Alto
+  // DC
+  [38.91, -77.06, 0.92, 0.08],  // Georgetown
+  [38.86, -76.98, 0.28, 0.10],  // SE DC
+  [39.00, -77.03, 0.55, 0.08],  // Silver Spring
+  // Philly
+  [39.95, -75.17, 0.65, 0.08],  // Center City
+  [39.99, -75.14, 0.22, 0.10],  // North Philly
+  // Boston
+  [42.36, -71.06, 0.80, 0.08],  // Downtown
+  [42.35, -71.08, 0.75, 0.06],  // Back Bay
+  [42.32, -71.07, 0.30, 0.08],  // Dorchester
+  // General US fill - rural/suburban baseline
+  [38.0, -97.0, 0.45, 8.0],     // Central US baseline
+  [43.0, -89.0, 0.50, 4.0],     // Midwest
+  [35.0, -80.0, 0.42, 4.0],     // Southeast
+  [36.0, -115.0, 0.48, 3.0],    // Southwest
+  [45.0, -93.0, 0.52, 3.0],     // Upper Midwest
+  [30.0, -90.0, 0.32, 3.0],     // Deep South
+  [40.0, -75.0, 0.55, 2.0],     // Mid-Atlantic
+  [47.0, -120.0, 0.50, 3.0],    // Pacific NW
+  [34.0, -118.0, 0.45, 2.0],    // SoCal
+];
 
-  poly.bindPopup(`
-    <div class="popup-content">
-      <h3>${area.name}</h3>
-      <div class="popup-row">
-        <span class="popup-label">Median Income</span>
-        <span class="popup-value">$${area.income.toLocaleString()}</span>
-      </div>
-      <div class="popup-row">
-        <span class="popup-label">Avg. Rent</span>
-        <span class="popup-value">$${area.rent.toLocaleString()}/mo</span>
-      </div>
-      <div class="popup-row">
-        <span class="popup-label">Affordability</span>
-        <span class="popup-score ${scoreClass(area.score)}">${area.score}/100 &middot; ${scoreLabel(area.score)}</span>
-      </div>
-    </div>
-  `, { maxWidth: 280 });
-
-  poly.on('mouseover', function() {
-    this.setStyle({ fillOpacity: 0.65, weight: 3 });
+function getIncomeLevel(lat, lng) {
+  let totalWeight = 0;
+  let weightedSum = 0;
+  metroInfluence.forEach(([mLat, mLng, income, radius]) => {
+    const dist = Math.sqrt(Math.pow(lat - mLat, 2) + Math.pow((lng - mLng) * 0.75, 2));
+    if (dist < radius * 2.5) {
+      const weight = Math.pow(Math.max(0, 1 - dist / (radius * 2.5)), 2);
+      totalWeight += weight;
+      weightedSum += weight * income;
+    }
   });
-  poly.on('mouseout', function() {
-    this.setStyle({ fillOpacity: 0.45, weight: 2 });
-  });
-});
+  if (totalWeight === 0) return 0.45;
+  return weightedSum / totalWeight;
+}
 
-// ─── SEARCH FUNCTIONALITY ───
+function incomeToColor(level) {
+  // Green (affordable/low income) -> Yellow (moderate) -> Orange -> Red (high income/expensive)
+  if (level < 0.25) return { fill: '#15803d', opacity: 0.42 };       // deep green - very affordable
+  if (level < 0.35) return { fill: '#22c55e', opacity: 0.38 };       // green - affordable
+  if (level < 0.45) return { fill: '#84cc16', opacity: 0.34 };       // lime - moderate-affordable
+  if (level < 0.55) return { fill: '#eab308', opacity: 0.32 };       // yellow - moderate
+  if (level < 0.65) return { fill: '#f59e0b', opacity: 0.34 };       // amber - moderate-expensive
+  if (level < 0.75) return { fill: '#f97316', opacity: 0.38 };       // orange - expensive
+  if (level < 0.85) return { fill: '#ef4444', opacity: 0.42 };       // red - very expensive
+  return { fill: '#dc2626', opacity: 0.48 };                          // deep red - extremely expensive
+}
+
+// Generate grid cells covering the continental US
+const gridLayer = L.layerGroup().addTo(map);
+
+function renderGrid() {
+  gridLayer.clearLayers();
+  const bounds = map.getBounds();
+  const zoom = map.getZoom();
+
+  // Cell size adapts to zoom level
+  let cellSize;
+  if (zoom <= 4) cellSize = 1.0;
+  else if (zoom <= 5) cellSize = 0.5;
+  else if (zoom <= 6) cellSize = 0.25;
+  else if (zoom <= 7) cellSize = 0.15;
+  else if (zoom <= 8) cellSize = 0.08;
+  else if (zoom <= 9) cellSize = 0.05;
+  else if (zoom <= 10) cellSize = 0.03;
+  else if (zoom <= 11) cellSize = 0.018;
+  else if (zoom <= 12) cellSize = 0.01;
+  else cellSize = 0.006;
+
+  // Limit to continental US bounds
+  const minLat = Math.max(24.5, bounds.getSouth());
+  const maxLat = Math.min(49.5, bounds.getNorth());
+  const minLng = Math.max(-125, bounds.getWest());
+  const maxLng = Math.min(-66, bounds.getEast());
+
+  // Cap max cells for performance
+  const maxCells = 2500;
+  const estCols = Math.ceil((maxLng - minLng) / cellSize);
+  const estRows = Math.ceil((maxLat - minLat) / cellSize);
+  if (estCols * estRows > maxCells) {
+    cellSize = Math.sqrt((maxLng - minLng) * (maxLat - minLat) / maxCells);
+  }
+
+  const startLat = Math.floor(minLat / cellSize) * cellSize;
+  const startLng = Math.floor(minLng / cellSize) * cellSize;
+
+  for (let lat = startLat; lat < maxLat; lat += cellSize) {
+    for (let lng = startLng; lng < maxLng; lng += cellSize) {
+      const centerLat = lat + cellSize / 2;
+      const centerLng = lng + cellSize / 2;
+
+      // Add slight variation with seeded random
+      const seed = Math.round((centerLat * 1000 + centerLng * 100) * 7);
+      const rng = seededRandom(seed);
+      const variation = (rng() - 0.5) * 0.12;
+
+      const income = Math.max(0, Math.min(1, getIncomeLevel(centerLat, centerLng) + variation));
+      const color = incomeToColor(income);
+
+      const rect = L.rectangle(
+        [[lat, lng], [lat + cellSize, lng + cellSize]],
+        { color: 'transparent', fillColor: color.fill, fillOpacity: color.opacity, weight: 0, interactive: false }
+      );
+      gridLayer.addLayer(rect);
+    }
+  }
+}
+
+renderGrid();
+map.on('moveend', renderGrid);
+
+// ─── CUSTOM MARKER ICONS (housing listings on top) ───
+function createIcon(color, price) {
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `<div style="
+      background:${color};
+      color:#fff;
+      padding:5px 10px;
+      border-radius:20px;
+      font-family:var(--font-body);
+      font-size:12px;
+      font-weight:600;
+      white-space:nowrap;
+      box-shadow:0 2px 8px rgba(0,0,0,0.3);
+      border:2px solid #fff;
+      cursor:pointer;
+      text-align:center;
+      line-height:1.3;
+    ">$${price.toLocaleString()}</div>`,
+    iconSize: [0, 0],
+    iconAnchor: [35, 16]
+  });
+}
+
+const priceColor = (rent) => {
+  if (rent <= 700) return '#15803d';
+  if (rent <= 900) return '#059669';
+  if (rent <= 1100) return '#0d9488';
+  return '#0284c7';
+};
+
+// ─── HOUSING LISTINGS ───
+const listings = [
+  // NYC
+  { name: "Melrose Commons Apartments", address: "345 E 154th St, Bronx, NY", coords: [40.8205, -73.9185], rent: 850, beds: 1, type: "LIHTC", sqft: 550 },
+  { name: "East Harlem Center", address: "2253 3rd Ave, New York, NY", coords: [40.7948, -73.9388], rent: 975, beds: 2, type: "Section 8", sqft: 720 },
+  { name: "Prospect Plaza", address: "1785 Prospect Pl, Brooklyn, NY", coords: [40.6734, -73.9144], rent: 1100, beds: 2, type: "NYCHA", sqft: 780 },
+  { name: "Marcus Garvey Village", address: "1440 E New York Ave, Brooklyn, NY", coords: [40.6614, -73.9125], rent: 900, beds: 1, type: "Section 8", sqft: 580 },
+  { name: "Jackson Heights Co-op", address: "34-20 78th St, Queens, NY", coords: [40.7505, -73.8877], rent: 1250, beds: 2, type: "Income-Restricted", sqft: 800 },
+  { name: "Astoria Houses", address: "4-20 Astoria Blvd, Queens, NY", coords: [40.7712, -73.9238], rent: 780, beds: 1, type: "NYCHA", sqft: 520 },
+  { name: "Lafayette Gardens", address: "250 DeKalb Ave, Brooklyn, NY", coords: [40.6891, -73.9762], rent: 1050, beds: 2, type: "LIHTC", sqft: 740 },
+  { name: "Morrisania Air Rights", address: "3440 Third Ave, Bronx, NY", coords: [40.8295, -73.9054], rent: 920, beds: 1, type: "Section 8", sqft: 560 },
+  // LA
+  { name: "Jordan Downs Phase 1", address: "2100 E 103rd St, Los Angeles, CA", coords: [33.9421, -118.2467], rent: 750, beds: 2, type: "Section 8", sqft: 820 },
+  { name: "Pueblo Del Sol", address: "1300 N Vignes St, Los Angeles, CA", coords: [34.0610, -118.2295], rent: 1100, beds: 2, type: "LIHTC", sqft: 850 },
+  { name: "Imperial Courts", address: "11541 Croesus Ave, Los Angeles, CA", coords: [33.9265, -118.2445], rent: 620, beds: 2, type: "Section 8", sqft: 680 },
+  { name: "Vermont Manchester Apts", address: "8500 S Vermont Ave, Los Angeles, CA", coords: [33.9560, -118.2915], rent: 950, beds: 1, type: "LIHTC", sqft: 580 },
+  { name: "Compton Creek Village", address: "825 S Willowbrook Ave, Compton, CA", coords: [33.8925, -118.2360], rent: 880, beds: 2, type: "LIHTC", sqft: 760 },
+  { name: "East LA Family Apts", address: "4726 E Whittier Blvd, Los Angeles, CA", coords: [34.0232, -118.1580], rent: 950, beds: 3, type: "Section 8", sqft: 980 },
+  { name: "Inglewood Villas", address: "220 E Nutwood St, Inglewood, CA", coords: [33.9555, -118.3480], rent: 1100, beds: 2, type: "LIHTC", sqft: 790 },
+  // Chicago
+  { name: "Oakwood Shores", address: "3815 S Lake Park Ave, Chicago, IL", coords: [41.8240, -87.6050], rent: 750, beds: 2, type: "Section 8", sqft: 820 },
+  { name: "Humboldt Park Residences", address: "3213 W North Ave, Chicago, IL", coords: [41.9100, -87.7080], rent: 900, beds: 2, type: "Income-Restricted", sqft: 750 },
+  { name: "Pilsen Family Housing", address: "1830 S Racine Ave, Chicago, IL", coords: [41.8568, -87.6565], rent: 820, beds: 2, type: "LIHTC", sqft: 700 },
+  { name: "Englewood Square", address: "815 W 63rd St, Chicago, IL", coords: [41.7798, -87.6400], rent: 680, beds: 1, type: "Section 8", sqft: 520 },
+  { name: "Lawndale Restoration", address: "3600 W Roosevelt Rd, Chicago, IL", coords: [41.8660, -87.7165], rent: 780, beds: 3, type: "Section 8", sqft: 950 },
+  // Houston
+  { name: "Cuney Homes", address: "3260 Truxillo St, Houston, TX", coords: [29.7178, -95.3540], rent: 550, beds: 2, type: "Section 8", sqft: 750 },
+  { name: "Sharpstown Terrace", address: "7100 Bellerive Dr, Houston, TX", coords: [29.6870, -95.5350], rent: 780, beds: 2, type: "LIHTC", sqft: 820 },
+  { name: "Alief Oaks Apartments", address: "11575 Bellaire Blvd, Houston, TX", coords: [29.7050, -95.5825], rent: 750, beds: 2, type: "LIHTC", sqft: 800 },
+  { name: "Palm Center Homes", address: "5300 Griggs Rd, Houston, TX", coords: [29.7050, -95.3380], rent: 650, beds: 1, type: "Section 8", sqft: 520 },
+  // Atlanta
+  { name: "Ashley Courts at Cascade", address: "505 Fairburn Rd SW, Atlanta, GA", coords: [33.7175, -84.4720], rent: 850, beds: 2, type: "LIHTC", sqft: 820 },
+  { name: "East Point Village", address: "3055 Washington Rd, East Point, GA", coords: [33.6655, -84.4455], rent: 780, beds: 2, type: "Income-Restricted", sqft: 750 },
+  { name: "Collegetown at West End", address: "862 Oak St SW, Atlanta, GA", coords: [33.7365, -84.4125], rent: 900, beds: 1, type: "LIHTC", sqft: 580 },
+  // Phoenix
+  { name: "South Mountain Family", address: "8035 S Central Ave, Phoenix, AZ", coords: [33.3765, -112.0730], rent: 650, beds: 2, type: "Section 8", sqft: 780 },
+  { name: "Maryvale Terrace", address: "4840 W Indian School Rd, Phoenix, AZ", coords: [33.4945, -112.1640], rent: 750, beds: 2, type: "LIHTC", sqft: 800 },
+  { name: "Garfield Commons", address: "1534 E Washington St, Phoenix, AZ", coords: [33.4483, -112.0445], rent: 700, beds: 1, type: "Section 8", sqft: 500 },
+  // Miami
+  { name: "Brisas del Rio", address: "1420 NW 7th St, Miami, FL", coords: [25.7755, -80.2170], rent: 850, beds: 2, type: "LIHTC", sqft: 750 },
+  { name: "Homestead Gardens", address: "30 NW 5th Ave, Homestead, FL", coords: [25.4685, -80.4790], rent: 750, beds: 2, type: "Section 8", sqft: 780 },
+  { name: "Liberty Square Rising", address: "1455 NW 65th St, Miami, FL", coords: [25.8305, -80.2245], rent: 720, beds: 2, type: "Section 8", sqft: 700 },
+  // Seattle
+  { name: "Rainier Vista", address: "2800 S Oregon St, Seattle, WA", coords: [47.5445, -122.2950], rent: 1050, beds: 2, type: "Section 8", sqft: 820 },
+  { name: "Yesler Terrace", address: "882 Yesler Way, Seattle, WA", coords: [47.6015, -122.3220], rent: 950, beds: 1, type: "SHA", sqft: 580 },
+  { name: "Tacoma Hillside Terrace", address: "2500 S G St, Tacoma, WA", coords: [47.2415, -122.4440], rent: 780, beds: 2, type: "Section 8", sqft: 760 },
+  // Denver
+  { name: "Sun Valley EcoDistrict", address: "1100 Decatur St, Denver, CO", coords: [39.7315, -105.0095], rent: 850, beds: 2, type: "LIHTC", sqft: 780 },
+  { name: "Montbello Family Apts", address: "4745 Kittredge St, Denver, CO", coords: [39.7820, -104.8280], rent: 780, beds: 2, type: "Section 8", sqft: 740 },
+  // Detroit
+  { name: "Gardenview Estates", address: "9255 Van Dyke St, Detroit, MI", coords: [42.3870, -83.0225], rent: 550, beds: 2, type: "Section 8", sqft: 780 },
+  { name: "Elmwood Park Plaza", address: "500 Chene St, Detroit, MI", coords: [42.3465, -83.0290], rent: 600, beds: 1, type: "Section 8", sqft: 500 },
+  // Dallas
+  { name: "Turner Courts", address: "1410 Gallagher St, Dallas, TX", coords: [32.7540, -96.7485], rent: 580, beds: 2, type: "Section 8", sqft: 720 },
+  { name: "Fort Worth Heritage", address: "916 E Hattie St, Fort Worth, TX", coords: [32.7585, -97.3190], rent: 750, beds: 2, type: "Income-Restricted", sqft: 760 },
+  { name: "South Dallas Heritage", address: "4100 S Lancaster Rd, Dallas, TX", coords: [32.7145, -96.7735], rent: 650, beds: 1, type: "Section 8", sqft: 500 },
+  // SF
+  { name: "Hunters View Phase 2", address: "227 West Point Rd, San Francisco, CA", coords: [37.7330, -122.3815], rent: 1050, beds: 2, type: "SFHA", sqft: 780 },
+  { name: "Oakland Family Housing", address: "1430 Alice St, Oakland, CA", coords: [37.7985, -122.2650], rent: 980, beds: 2, type: "Section 8", sqft: 720 },
+  // DC
+  { name: "Barry Farm Redevelopment", address: "1252 Sumner Rd SE, Washington, DC", coords: [38.8575, -76.9870], rent: 850, beds: 2, type: "Section 8", sqft: 780 },
+  { name: "Greenleaf Gardens", address: "203 N St SW, Washington, DC", coords: [38.8765, -77.0175], rent: 720, beds: 2, type: "DCHA", sqft: 700 },
+  // Philly
+  { name: "Norris Apartments", address: "2101 N 11th St, Philadelphia, PA", coords: [39.9800, -75.1510], rent: 750, beds: 2, type: "Section 8", sqft: 740 },
+  { name: "Bartram Village", address: "2500 Wanamaker St, Philadelphia, PA", coords: [39.9305, -75.2230], rent: 650, beds: 2, type: "PHA", sqft: 720 },
+  // Boston
+  { name: "Whittier Street Apts", address: "75 Whittier St, Boston, MA", coords: [42.3350, -71.0835], rent: 950, beds: 2, type: "Section 8", sqft: 720 },
+  { name: "Dorchester Crossing", address: "770 Dudley St, Boston, MA", coords: [42.3165, -71.0725], rent: 1050, beds: 2, type: "LIHTC", sqft: 800 },
+];
+
+// Only show listing markers when zoomed in enough
+const listingMarkers = L.layerGroup();
+
+function updateListings() {
+  listingMarkers.clearLayers();
+  if (map.getZoom() >= 9) {
+    const bounds = map.getBounds();
+    listings.forEach(listing => {
+      if (bounds.contains(listing.coords)) {
+        const icon = createIcon(priceColor(listing.rent), listing.rent);
+        const marker = L.marker(listing.coords, { icon });
+        const typeColors = {
+          "Section 8": "#059669", "LIHTC": "#7c3aed", "Income-Restricted": "#2563eb",
+          "NYCHA": "#d97706", "CHA": "#d97706", "SHA": "#d97706", "HACLA": "#d97706",
+          "SFHA": "#d97706", "DCHA": "#d97706", "BHA": "#d97706", "PHA": "#d97706"
+        };
+        const tc = typeColors[listing.type] || "#6b7280";
+        marker.bindPopup(`
+          <div class="popup-content">
+            <h3>${listing.name}</h3>
+            <div style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:650;background:${tc}18;color:${tc};margin-bottom:12px;">${listing.type}</div>
+            <div style="font-size:13px;color:#8a8070;margin-bottom:14px;line-height:1.5;">${listing.address}</div>
+            <div class="popup-row">
+              <span class="popup-label">Monthly Rent</span>
+              <span class="popup-value" style="color:#059669;">$${listing.rent.toLocaleString()}/mo</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Bedrooms</span>
+              <span class="popup-value">${listing.beds} BR</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Size</span>
+              <span class="popup-value">${listing.sqft.toLocaleString()} sq ft</span>
+            </div>
+            <div style="margin-top:14px;">
+              <button style="width:100%;padding:10px;border:none;border-radius:100px;background:#059669;color:#fff;font-family:var(--font-body);font-size:13.5px;font-weight:550;cursor:pointer;">View Details</button>
+            </div>
+          </div>
+        `, { maxWidth: 300 });
+        listingMarkers.addLayer(marker);
+      }
+    });
+  }
+}
+
+listingMarkers.addTo(map);
+updateListings();
+map.on('moveend', updateListings);
+
+// ─── SEARCH ───
 const cityCoords = {
-  "new york": [40.75, -73.95, 11],
-  "nyc": [40.75, -73.95, 11],
-  "manhattan": [40.76, -73.97, 12],
-  "brooklyn": [40.68, -73.94, 12],
-  "bronx": [40.82, -73.92, 12],
-  "los angeles": [34.0, -118.3, 11],
-  "la": [34.0, -118.3, 11],
-  "chicago": [41.88, -87.65, 11],
-  "houston": [29.74, -95.45, 11],
-  "atlanta": [33.76, -84.40, 11],
-  "phoenix": [33.45, -112.07, 11],
-  "miami": [25.79, -80.21, 11],
-  "seattle": [47.57, -122.30, 11],
-  "denver": [39.74, -104.88, 11],
-  "detroit": [42.35, -83.08, 11],
-  "san francisco": [37.77, -122.42, 12],
-  "sf": [37.77, -122.42, 12],
-  "boston": [42.36, -71.06, 12],
-  "dallas": [32.78, -96.80, 11],
-  "philadelphia": [39.95, -75.17, 11],
+  "new york": [40.75, -73.95, 12], "nyc": [40.75, -73.95, 12],
+  "manhattan": [40.76, -73.97, 13], "brooklyn": [40.68, -73.94, 13],
+  "bronx": [40.82, -73.92, 13], "queens": [40.73, -73.87, 12],
+  "los angeles": [34.0, -118.3, 11], "la": [34.0, -118.3, 11],
+  "chicago": [41.88, -87.65, 12], "houston": [29.74, -95.45, 11],
+  "atlanta": [33.76, -84.40, 12], "phoenix": [33.45, -112.07, 11],
+  "miami": [25.79, -80.21, 11], "seattle": [47.57, -122.30, 12],
+  "denver": [39.74, -104.88, 12], "detroit": [42.35, -83.08, 12],
+  "san francisco": [37.77, -122.42, 12], "sf": [37.77, -122.42, 12],
+  "oakland": [37.80, -122.27, 13], "boston": [42.36, -71.06, 13],
+  "dallas": [32.78, -96.80, 11], "fort worth": [32.75, -97.33, 12],
+  "philadelphia": [39.95, -75.17, 13], "washington dc": [38.90, -77.03, 12],
+  "dc": [38.90, -77.03, 12], "tacoma": [47.25, -122.44, 13],
+  "san jose": [37.34, -121.89, 12],
 };
 
 document.getElementById('searchInput').addEventListener('keypress', function(e) {
