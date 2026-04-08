@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HomeBase — Affordable Housing Finder</title>
+<meta name="description" content="Find affordable housing near you. Explore neighborhoods by income level, rent prices, and livability scores with our interactive map.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
@@ -118,6 +119,7 @@ nav.scrolled {
   letter-spacing: 0.01em;
   transition: color var(--transition);
   position: relative;
+  cursor: pointer;
 }
 
 .nav-links a::after {
@@ -509,6 +511,227 @@ nav.scrolled {
   background: var(--emerald-50);
   color: var(--emerald-700);
 }
+
+/* ═══════════════════════ BUDGET & FILTERS BAR ═══════════════════════ */
+.budget-bar {
+  background: var(--sand-50);
+  border-bottom: 1px solid var(--sand-100);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s;
+  padding: 0 24px;
+}
+.budget-bar.open {
+  max-height: 600px;
+  padding: 20px 24px 24px;
+}
+.budget-bar-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--emerald-400);
+  border-radius: 100px;
+  background: var(--emerald-50);
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--emerald-700);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 550;
+}
+.budget-bar-toggle:hover {
+  background: var(--emerald-100);
+}
+.budget-bar-toggle.active {
+  background: var(--emerald-600);
+  color: #fff;
+  border-color: var(--emerald-600);
+}
+.budget-section-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.budget-section-sub {
+  font-size: 13px;
+  color: var(--sand-600);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.budget-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.budget-field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sand-600);
+}
+.budget-field input,
+.budget-field select {
+  padding: 10px 14px;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-xs);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.budget-field input:focus,
+.budget-field select:focus {
+  border-color: var(--emerald-400);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+.budget-field input::placeholder { color: var(--sand-300); }
+.budget-afford {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--emerald-50);
+  border: 1px solid var(--emerald-200);
+  border-radius: var(--radius-xs);
+  font-size: 14px;
+  color: var(--emerald-800);
+  font-weight: 500;
+  min-height: 42px;
+}
+.budget-afford strong {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--emerald-700);
+}
+.budget-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.amenity-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border: 1px solid var(--sand-200);
+  border-radius: 100px;
+  background: var(--white);
+  font-size: 12.5px;
+  font-family: var(--font-body);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 450;
+  user-select: none;
+}
+.amenity-tag:hover { border-color: var(--emerald-300); }
+.amenity-tag.active {
+  border-color: var(--emerald-400);
+  background: var(--emerald-50);
+  color: var(--emerald-700);
+  font-weight: 550;
+}
+.budget-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+.budget-apply-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 100px;
+  background: var(--emerald-600);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.budget-apply-btn:hover {
+  background: var(--emerald-700);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5,150,105,0.3);
+}
+.budget-reset-btn {
+  padding: 10px 20px;
+  border: 1px solid var(--sand-200);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.budget-reset-btn:hover { border-color: var(--sand-300); background: var(--sand-50); }
+.budget-match-count {
+  font-size: 13px;
+  color: var(--sand-600);
+  margin-left: 8px;
+}
+.budget-match-count strong { color: var(--emerald-700); font-weight: 650; }
+
+@keyframes markerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.highlighted-marker { z-index: 800 !important; }
+.filter-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: var(--emerald-600);
+  color: #fff;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 650;
+  margin-left: 6px;
+  animation: badgePop 0.3s ease;
+}
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.realtor-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #d92228;
+  border-radius: 100px;
+  background: #d92228;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: #fff;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.realtor-btn:hover {
+  background: #b01c20;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 34, 40, 0.3);
+}
+
+.realtor-btn svg { flex-shrink: 0; }
 
 #map {
   height: 560px;
@@ -1058,6 +1281,7 @@ footer {
   margin-bottom: 12px;
   transition: color var(--transition);
   font-weight: 400;
+  cursor: pointer;
 }
 
 .footer-col a:hover { color: var(--emerald-400); }
@@ -1092,11 +1316,14 @@ footer {
 .leaflet-popup-content {
   margin: 0 !important;
   font-family: var(--font-body) !important;
-  min-width: 240px !important;
+  min-width: 260px !important;
+  line-height: 1.5 !important;
 }
 
+.leaflet-popup-content p { margin: 0 !important; }
+
 .popup-content {
-  padding: 20px;
+  padding: 16px 20px 20px;
 }
 
 .popup-content h3 {
@@ -1158,6 +1385,791 @@ footer {
   color: var(--emerald-700) !important;
 }
 
+/* ═══════════════════════ PROPERTY SIDE PANEL ═══════════════════════ */
+.property-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100%;
+  background: var(--white);
+  border-left: 1px solid var(--sand-200);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.08);
+}
+.property-panel.open { transform: translateX(0); }
+
+.panel-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--sand-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.panel-header h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--ink);
+}
+.panel-header .panel-count {
+  font-size: 13px;
+  color: var(--sand-600);
+  font-weight: 400;
+}
+.panel-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--sand-50);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sand-600);
+  transition: all var(--transition);
+}
+.panel-close:hover { background: var(--sand-200); color: var(--ink); }
+
+.panel-controls {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--sand-100);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.panel-sort {
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 7px 14px;
+  border: 1px solid var(--sand-200);
+  border-radius: 100px;
+  background: var(--white);
+  color: var(--ink-soft);
+  cursor: pointer;
+  outline: none;
+}
+.panel-sort:focus { border-color: var(--emerald-400); }
+
+.panel-realtor-link {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: #d92228;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity var(--transition);
+}
+.panel-realtor-link:hover { opacity: 0.7; }
+
+.panel-cards {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel-cards::-webkit-scrollbar { width: 6px; }
+.panel-cards::-webkit-scrollbar-track { background: transparent; }
+.panel-cards::-webkit-scrollbar-thumb { background: var(--sand-200); border-radius: 3px; }
+
+.panel-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--sand-600);
+  font-size: 14px;
+}
+
+/* ─── PROPERTY CARD ─── */
+.property-card {
+  background: var(--white);
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.property-card:hover {
+  border-color: var(--emerald-300);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+.property-card-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+.property-card-header {
+  height: 8px;
+  width: 100%;
+}
+.property-card-body {
+  padding: 16px;
+}
+.property-card-type {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+.property-card-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.property-card-address {
+  font-size: 12.5px;
+  color: var(--sand-600);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.property-card-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--sand-100);
+}
+.property-card-stat {
+  font-size: 12.5px;
+  color: var(--sand-600);
+}
+.property-card-stat strong {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.property-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.property-card-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--emerald-700);
+}
+.property-card-price span {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--sand-600);
+}
+
+/* ─── COMPOSITE SCORE BADGE ─── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.score-badge.score-high { background: #dcfce7; color: #166534; }
+.score-badge.score-mid { background: #fef9c3; color: #854d0e; }
+.score-badge.score-low { background: #fee2e2; color: #991b1b; }
+
+/* ─── PROPERTY DETAIL MODAL ─── */
+.property-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+.property-modal-overlay.open { display: flex; }
+
+.property-modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+}
+.property-modal::-webkit-scrollbar { width: 6px; }
+.property-modal::-webkit-scrollbar-thumb { background: var(--sand-200); border-radius: 3px; }
+
+.modal-header-bar {
+  height: 12px;
+  width: 100%;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-close {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-size: 18px;
+  z-index: 10;
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition);
+}
+.modal-close:hover { background: var(--sand-100); }
+
+.modal-hero-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-body { padding: 0; }
+.modal-body h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.modal-address {
+  font-size: 14px;
+  color: var(--sand-600);
+  margin-bottom: 20px;
+}
+.modal-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.modal-tag {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--sand-100);
+  color: var(--sand-800);
+}
+
+.modal-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.modal-stat {
+  text-align: center;
+  padding: 14px 8px;
+  background: var(--sand-50);
+  border-radius: var(--radius-xs);
+}
+.modal-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.modal-stat-label {
+  font-size: 11.5px;
+  color: var(--sand-600);
+  margin-top: 2px;
+}
+
+/* ─── SCORE BREAKDOWN BARS ─── */
+.score-section { margin-bottom: 28px; }
+.score-section h4 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.score-bar-label {
+  width: 100px;
+  font-size: 13px;
+  color: var(--sand-600);
+  flex-shrink: 0;
+}
+.score-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--sand-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.score-bar-value {
+  width: 36px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.modal-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.modal-feature {
+  padding: 6px 14px;
+  border: 1px solid var(--sand-200);
+  border-radius: 100px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.modal-contact {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.modal-contact-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.modal-contact-btn.primary {
+  background: var(--emerald-600);
+  color: var(--white);
+}
+.modal-contact-btn.primary:hover { background: var(--emerald-700); }
+.modal-contact-btn.secondary {
+  background: var(--sand-50);
+  color: var(--ink);
+  border: 1px solid var(--sand-200);
+}
+.modal-contact-btn.secondary:hover { background: var(--sand-100); }
+.modal-contact-btn.realtor {
+  background: #d92228;
+  color: #fff;
+}
+.modal-contact-btn.realtor:hover { background: #b01c20; }
+
+/* ═══════════════════════ PAGE MODAL ═══════════════════════ */
+.page-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 3000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 24px 24px;
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
+.page-modal-overlay.open { display: flex; }
+
+.page-modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  max-width: 680px;
+  width: 100%;
+  box-shadow: var(--shadow-elevated);
+  position: relative;
+  animation: fadeSlideUp 0.35s ease both;
+}
+
+.page-modal-header {
+  padding: 32px 36px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.page-modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.page-modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--sand-50);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 18px;
+  transition: all var(--transition);
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.page-modal-close:hover { background: var(--sand-200); color: var(--ink); }
+
+.page-modal-body {
+  padding: 24px 36px 36px;
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.page-modal-body h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  margin: 28px 0 12px;
+  letter-spacing: -0.01em;
+}
+.page-modal-body h3:first-child { margin-top: 0; }
+.page-modal-body p { margin-bottom: 16px; }
+.page-modal-body ul {
+  margin: 0 0 16px 20px;
+}
+.page-modal-body ul li {
+  margin-bottom: 8px;
+}
+.page-modal-body a {
+  color: var(--emerald-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ═══════════════════════ CONTACT FORM ═══════════════════════ */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--sand-200);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--sand-50);
+  transition: all var(--transition);
+  outline: none;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--emerald-400);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+  background: var(--white);
+}
+.contact-form textarea { resize: vertical; min-height: 120px; }
+.contact-form button {
+  align-self: flex-start;
+  padding: 12px 32px;
+  background: var(--emerald-700);
+  color: var(--white);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.contact-form button:hover { background: var(--emerald-800); }
+
+/* ═══════════════════════ SIGN IN OVERLAY ═══════════════════════ */
+.signin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--emerald-900) 0%, #043927 40%, var(--sand-900) 100%);
+  overflow-y: auto;
+}
+.signin-overlay.open { display: flex; }
+
+.signin-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 30%, rgba(16,185,129,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 80% 70%, rgba(52,211,153,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.signin-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.97);
+  border-radius: 20px;
+  padding: 44px 40px 40px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+  animation: fadeSlideUp 0.4s ease both;
+}
+
+.signin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  justify-content: center;
+}
+.signin-brand svg {
+  width: 28px;
+  height: 28px;
+  color: var(--emerald-700);
+}
+.signin-brand span {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--emerald-800);
+  letter-spacing: -0.02em;
+}
+
+.signin-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.signin-subtitle {
+  text-align: center;
+  color: var(--sand-600);
+  font-size: 14.5px;
+  margin-bottom: 28px;
+}
+
+.signin-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--sand-200);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.signin-google:hover {
+  border-color: var(--sand-300);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  background: var(--sand-50);
+}
+.signin-google svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.signin-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+  color: var(--sand-300);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.signin-divider::before,
+.signin-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sand-200);
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.signin-field {
+  position: relative;
+}
+.signin-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.signin-field input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--sand-200);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--sand-50);
+  transition: all var(--transition);
+  outline: none;
+}
+.signin-field input:focus {
+  border-color: var(--emerald-400);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+  background: var(--white);
+}
+.signin-field input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
+}
+
+.signin-field .toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--sand-600);
+  padding: 4px;
+  transition: color var(--transition);
+}
+.signin-field .toggle-password:hover { color: var(--ink); }
+
+.signin-forgot {
+  text-align: right;
+  margin-top: -4px;
+}
+.signin-forgot a {
+  font-size: 13px;
+  color: var(--emerald-700);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+.signin-forgot a:hover { color: var(--emerald-800); text-decoration: underline; }
+
+.signin-submit {
+  width: 100%;
+  padding: 14px;
+  margin-top: 6px;
+  background: var(--emerald-700);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.signin-submit:hover {
+  background: var(--emerald-800);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(5,150,105,0.35);
+}
+.signin-submit:active {
+  transform: translateY(0);
+}
+
+.signin-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--sand-600);
+}
+.signin-footer a {
+  color: var(--emerald-700);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.signin-footer a:hover { color: var(--emerald-800); text-decoration: underline; }
+
+.signin-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--sand-100);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sand-600);
+  font-size: 18px;
+  transition: all var(--transition);
+}
+.signin-close:hover { background: var(--sand-200); color: var(--ink); }
+
+.signin-success {
+  text-align: center;
+  padding: 24px 0;
+}
+.signin-success svg { margin-bottom: 16px; }
+.signin-success h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.signin-success p {
+  color: var(--sand-600);
+  font-size: 14.5px;
+}
+
+@media (max-width: 480px) {
+  .signin-card { padding: 32px 24px 28px; }
+  .signin-title { font-size: 24px; }
+}
+
 /* ═══════════════════════ SCROLL ANIMATIONS ═══════════════════════ */
 .reveal {
   opacity: 0;
@@ -1192,10 +2204,22 @@ footer {
   .map-toolbar { flex-direction: column; gap: 12px; }
   .map-search { min-width: unset; width: 100%; }
   .map-filters { width: 100%; overflow-x: auto; }
+  .realtor-btn { display: none; }
+  .budget-bar.open { padding: 16px 16px 20px; }
+  .budget-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .budget-amenities { gap: 6px; }
+  .amenity-tag { padding: 5px 10px; font-size: 11.5px; }
   #map { height: 400px; }
+  .property-panel { width: 100%; height: 50%; top: auto; bottom: 0; border-left: none; border-top: 1px solid var(--sand-200); transform: translateY(100%); }
+  .property-panel.open { transform: translateY(0); }
+  .property-modal { max-height: 90vh; margin: 12px; }
+  .modal-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   .cta-banner { padding: 48px 28px; }
+  .page-modal-header { padding: 24px 24px 0; }
+  .page-modal-body { padding: 20px 24px 28px; }
+  .page-modal-header h2 { font-size: 26px; }
 }
 
 /* ═══════════════════════ MOBILE NAV ═══════════════════════ */
@@ -1223,6 +2247,7 @@ footer {
   text-decoration: none;
   border-bottom: 1px solid var(--sand-100);
   font-weight: 450;
+  cursor: pointer;
 }
 
 .mobile-nav a:last-child { border-bottom: none; }
@@ -1233,7 +2258,11 @@ footer {
 <!-- ═══════════════════ NAVIGATION ═══════════════════ -->
 <nav id="navbar">
   <a href="#" class="nav-logo">
-    <svg viewBox="0 0 32 32" fill="none"><rect x="2" y="8" width="28" height="20" rx="3" stroke="currentColor" stroke-width="2.2"/><path d="M8 8V6a8 8 0 0116 0v2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="19" r="3" fill="currentColor"/></svg>
+    <svg viewBox="0 0 32 32" fill="none">
+      <path d="M4 14L16 4l12 10v14a2 2 0 01-2 2H6a2 2 0 01-2-2V14z" stroke="currentColor" stroke-width="2" fill="none"/>
+      <path d="M12 28V18h8v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="16" cy="12" r="2.5" fill="currentColor" opacity="0.6"/>
+    </svg>
     HomeBase
   </a>
   <ul class="nav-links">
@@ -1242,6 +2271,7 @@ footer {
     <li><a href="#features-section">Features</a></li>
     <li><a href="#pricing-section">Pricing</a></li>
     <li><a href="#faq-section">FAQ</a></li>
+    <li><a onclick="openSignIn()" style="cursor:pointer">Sign In</a></li>
     <li><a href="#map-section" class="nav-cta">Open Map</a></li>
   </ul>
   <button class="mobile-toggle" onclick="toggleMobileNav()" aria-label="Menu">
@@ -1255,6 +2285,9 @@ footer {
   <a href="#features-section" onclick="closeMobileNav()">Features</a>
   <a href="#pricing-section" onclick="closeMobileNav()">Pricing</a>
   <a href="#faq-section" onclick="closeMobileNav()">FAQ</a>
+  <a onclick="closeMobileNav();openPage('about')">About</a>
+  <a onclick="closeMobileNav();openPage('contact')">Contact</a>
+  <a onclick="closeMobileNav();openSignIn()" style="color:var(--emerald-400);font-weight:600;">Sign In</a>
 </div>
 
 <!-- ═══════════════════ HERO ═══════════════════ -->
@@ -1287,6 +2320,10 @@ footer {
       <div class="hero-stat">
         <div class="number">50+</div>
         <div class="label">Data indicators</div>
+      </div>
+      <div class="hero-stat">
+        <div class="number" id="liveSignupCount">—</div>
+        <div class="label">Members joined</div>
       </div>
     </div>
   </div>
@@ -1321,10 +2358,131 @@ footer {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>
             Score
           </button>
+          <button class="budget-bar-toggle" id="budgetToggle" onclick="toggleBudgetBar()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Budget & Filters
+          </button>
+          <a id="realtorToolbarBtn" class="realtor-btn" href="https://www.realtor.com/" target="_blank" rel="noopener noreferrer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Realtor.com
+          </a>
+        </div>
+      </div>
+      <!-- Budget & Filters Bar -->
+      <div class="budget-bar" id="budgetBar">
+        <div class="budget-section-title">Set Your Budget</div>
+        <div class="budget-section-sub">Enter your monthly income and we'll calculate what you can comfortably afford based on the 30% rule. Add filters to narrow results.</div>
+        <div class="budget-grid">
+          <div class="budget-field">
+            <label for="budgetIncome">Monthly Income</label>
+            <input type="text" id="budgetIncome" placeholder="$4,000" inputmode="numeric">
+          </div>
+          <div class="budget-field">
+            <label>You Can Afford</label>
+            <div class="budget-afford" id="budgetAfford">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              <span id="affordAmount">Enter income above</span>
+            </div>
+          </div>
+          <div class="budget-field">
+            <label for="budgetMaxRent">Max Rent</label>
+            <input type="text" id="budgetMaxRent" placeholder="$1,200" inputmode="numeric">
+          </div>
+          <div class="budget-field">
+            <label for="budgetDownPayment">Down Payment Budget</label>
+            <input type="text" id="budgetDownPayment" placeholder="$25,000" inputmode="numeric">
+          </div>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-field">
+            <label for="filterBeds">Bedrooms</label>
+            <select id="filterBeds">
+              <option value="">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+          <div class="budget-field">
+            <label for="filterBaths">Bathrooms</label>
+            <select id="filterBaths">
+              <option value="">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+            </select>
+          </div>
+          <div class="budget-field">
+            <label for="filterType">Property Type</label>
+            <select id="filterType">
+              <option value="">All Types</option>
+              <option value="LIHTC">LIHTC</option>
+              <option value="Section 8">Section 8</option>
+              <option value="Income-Restricted">Income-Restricted</option>
+              <option value="Public Housing">Public Housing</option>
+              <option value="Market Rate">Market Rate</option>
+            </select>
+          </div>
+          <div class="budget-field">
+            <label for="filterMinScore">Min Score</label>
+            <select id="filterMinScore">
+              <option value="">Any Score</option>
+              <option value="50">50+</option>
+              <option value="60">60+</option>
+              <option value="70">70+</option>
+              <option value="80">80+</option>
+            </select>
+          </div>
+        </div>
+        <div class="budget-field" style="margin-bottom:14px;">
+          <label>Amenities</label>
+          <div class="budget-amenities" id="amenityFilters">
+            <button class="amenity-tag" data-amenity="Parking">Parking / Garage</button>
+            <button class="amenity-tag" data-amenity="Pool">Pool</button>
+            <button class="amenity-tag" data-amenity="Gym">Gym</button>
+            <button class="amenity-tag" data-amenity="Pet Friendly">Pet Friendly</button>
+            <button class="amenity-tag" data-amenity="Laundry">Laundry</button>
+            <button class="amenity-tag" data-amenity="Central AC">Central AC</button>
+            <button class="amenity-tag" data-amenity="Dishwasher">Dishwasher</button>
+            <button class="amenity-tag" data-amenity="Elevator">Elevator</button>
+            <button class="amenity-tag" data-amenity="Security">Security</button>
+            <button class="amenity-tag" data-amenity="Balcony">Balcony</button>
+            <button class="amenity-tag" data-amenity="Playground">Playground</button>
+          </div>
+        </div>
+        <div class="budget-actions">
+          <button class="budget-apply-btn" onclick="applyFilters()">Apply Filters</button>
+          <button class="budget-reset-btn" onclick="resetFilters()">Reset All</button>
+          <span class="budget-match-count" id="budgetMatchCount"></span>
         </div>
       </div>
       <div style="position:relative;">
         <div id="map"></div>
+        <!-- Property Side Panel -->
+        <div class="property-panel" id="propertyPanel">
+          <div class="panel-header">
+            <div>
+              <h3 id="panelTitle">Properties</h3>
+              <span class="panel-count" id="panelCount"></span>
+            </div>
+            <button class="panel-close" onclick="closePanel()" aria-label="Close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="panel-controls">
+            <select class="panel-sort" id="panelSort" onchange="sortPanel()">
+              <option value="score">Sort by Score</option>
+              <option value="rent-asc">Rent: Low to High</option>
+              <option value="rent-desc">Rent: High to Low</option>
+              <option value="beds">Bedrooms</option>
+            </select>
+            <a class="panel-realtor-link" id="panelRealtorLink" href="https://www.realtor.com/" target="_blank" rel="noopener noreferrer">
+              View on Realtor.com
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+          <div class="panel-cards" id="panelCards"></div>
+        </div>
         <div class="map-legend">
           <h4>Income Level</h4>
           <div class="legend-item"><span class="legend-color" style="background:#15803d;"></span> Very Affordable</div>
@@ -1333,7 +2491,7 @@ footer {
           <div class="legend-item"><span class="legend-color" style="background:#eab308;"></span> Moderate</div>
           <div class="legend-item"><span class="legend-color" style="background:#f97316;"></span> Expensive</div>
           <div class="legend-item"><span class="legend-color" style="background:#ef4444;"></span> Very Expensive</div>
-          <div style="margin-top:12px;padding-top:10px;border-top:1px solid #e8e4dd;font-size:11px;color:#8a8070;">Zoom in to see listings</div>
+          <div style="margin-top:12px;padding-top:10px;border-top:1px solid #e8e4dd;font-size:11px;color:#8a8070;">Click a state to explore · Zoom in to see listings</div>
         </div>
       </div>
     </div>
@@ -1402,9 +2560,9 @@ footer {
       <div class="feature-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </div>
-      <h3>Housing Listings</h3>
-      <p>Browse verified affordable apartments and housing programs directly on the map. Filter by Section 8, LIHTC, income-restricted, and market-rate affordable units.</p>
-      <span class="feature-tag">Updated daily</span>
+      <h3>Real Listings</h3>
+      <p>Browse real homes for sale and apartments for rent powered by Realtor.com. Click any listing to see actual pricing, photos, and details directly on the property page.</p>
+      <span class="feature-tag">Real-time listings</span>
     </div>
   </div>
 </section>
@@ -1439,7 +2597,7 @@ footer {
           Basic income data overlay
         </li>
       </ul>
-      <button class="pricing-btn pricing-btn-outline">Get Started</button>
+      <button class="pricing-btn pricing-btn-outline" onclick="handlePricing('free')">Get Started</button>
     </div>
     <div class="pricing-card featured reveal">
       <div class="pricing-popular">Most Popular</div>
@@ -1468,7 +2626,7 @@ footer {
           Saved searches & alerts
         </li>
       </ul>
-      <button class="pricing-btn pricing-btn-filled">Get Started</button>
+      <button class="pricing-btn pricing-btn-filled" onclick="handlePricing('pro')">Get Started</button>
     </div>
     <div class="pricing-card reveal">
       <div class="tier">Enterprise</div>
@@ -1496,7 +2654,7 @@ footer {
           Dedicated account manager
         </li>
       </ul>
-      <button class="pricing-btn pricing-btn-outline">Contact Sales</button>
+      <button class="pricing-btn pricing-btn-outline" onclick="handlePricing('enterprise')">Contact Sales</button>
     </div>
   </div>
 </section>
@@ -1520,7 +2678,7 @@ footer {
         Is the map data up to date?
         <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </button>
-      <div class="faq-answer"><p>Yes. Income and demographic data is updated annually from Census Bureau releases. Rent prices and listings are refreshed daily from multiple verified sources. Our affordability scores recalculate monthly to reflect market changes.</p></div>
+      <div class="faq-answer"><p>Yes. Income and demographic data is updated annually from Census Bureau releases. Rent prices and listings are refreshed daily from multiple verified sources including Realtor.com. Our affordability scores recalculate monthly to reflect market changes.</p></div>
     </div>
     <div class="faq-item reveal">
       <button class="faq-question" onclick="toggleFaq(this)">
@@ -1545,10 +2703,10 @@ footer {
     </div>
     <div class="faq-item reveal">
       <button class="faq-question" onclick="toggleFaq(this)">
-        How accurate are the neighborhood reports?
+        How do the listing links work?
         <span class="faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
       </button>
-      <div class="faq-answer"><p>Our reports pull from authoritative sources including the U.S. Census Bureau, Bureau of Labor Statistics, National Center for Education Statistics, FBI UCR, and EPA. Data accuracy is validated against multiple sources and refreshed on published schedules.</p></div>
+      <div class="faq-answer"><p>HomeBase links directly to property listings on Realtor.com. When you find a property you like, click "View Listing" to see the full details, photos, pricing, and contact information directly on the property's page on Realtor.com.</p></div>
     </div>
   </div>
 </section>
@@ -1570,7 +2728,11 @@ footer {
   <div class="footer-grid">
     <div class="footer-brand">
       <a href="#" class="nav-logo">
-        <svg viewBox="0 0 32 32" fill="none"><rect x="2" y="8" width="28" height="20" rx="3" stroke="currentColor" stroke-width="2.2"/><path d="M8 8V6a8 8 0 0116 0v2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="19" r="3" fill="currentColor"/></svg>
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M4 14L16 4l12 10v14a2 2 0 01-2 2H6a2 2 0 01-2-2V14z" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M12 28V18h8v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="16" cy="12" r="2.5" fill="currentColor" opacity="0.6"/>
+        </svg>
         HomeBase
       </a>
       <p>Making affordable housing search transparent, data-driven, and accessible for everyone.</p>
@@ -1580,31 +2742,138 @@ footer {
       <a href="#map-section">Interactive Map</a>
       <a href="#features-section">Features</a>
       <a href="#pricing-section">Pricing</a>
-      <a href="#">API</a>
+      <a onclick="openPage('datasources')">Data Sources</a>
     </div>
     <div class="footer-col">
       <h4>Resources</h4>
-      <a href="#">Blog</a>
-      <a href="#">Data Sources</a>
-      <a href="#">Housing Guide</a>
+      <a onclick="openPage('blog')">Blog</a>
+      <a onclick="openPage('guide')">Housing Guide</a>
       <a href="#faq-section">FAQ</a>
+      <a href="https://www.realtor.com/" target="_blank" rel="noopener noreferrer">Realtor.com</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+      <a onclick="openPage('about')">About</a>
+      <a onclick="openPage('contact')">Contact</a>
+      <a onclick="openPage('privacy')">Privacy Policy</a>
+      <a onclick="openPage('terms')">Terms of Service</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>&copy; 2026 HomeBase. All rights reserved.</span>
-    <a href="#">Built for renters, by renters.</a>
+    <a href="#" onclick="event.preventDefault();">Built for renters, by renters.</a>
   </div>
 </footer>
 
+<!-- ═══════════════════ PROPERTY DETAIL MODAL ═══════════════════ -->
+<div class="property-modal-overlay" id="propertyModal">
+  <div class="property-modal">
+    <div class="modal-header-bar" id="modalHeaderBar"></div>
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PAGE MODALS ═══════════════════ -->
+<div class="page-modal-overlay" id="pageModal" onclick="if(event.target===this)closePage()">
+  <div class="page-modal">
+    <div class="page-modal-header">
+      <h2 id="pageModalTitle"></h2>
+      <button class="page-modal-close" onclick="closePage()" aria-label="Close">&times;</button>
+    </div>
+    <div class="page-modal-body" id="pageModalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SIGN IN OVERLAY ═══════════════════ -->
+<div class="signin-overlay" id="signinOverlay" onclick="if(event.target===this)closeSignIn()">
+  <div class="signin-card" id="signinCard">
+    <button class="signin-close" onclick="closeSignIn()" aria-label="Close">&times;</button>
+    <div class="signin-brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M4 14L16 4l12 10v14a2 2 0 01-2 2H6a2 2 0 01-2-2V14z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M12 28V18h8v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="12" r="2.5" fill="currentColor" opacity="0.6"/>
+      </svg>
+      <span>HomeBase</span>
+    </div>
+    <h2 class="signin-title">Welcome back</h2>
+    <p class="signin-subtitle">Sign in to access your saved searches and neighborhood data.</p>
+
+    <button class="signin-google" onclick="handleGoogleSignIn()">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="signin-divider"><span>or</span></div>
+
+    <form class="signin-form" id="signinForm" onsubmit="handleSignIn(event)">
+      <div class="signin-field">
+        <label for="signinEmail">Email address</label>
+        <input type="email" id="signinEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="signin-field">
+        <label for="signinPassword">Password</label>
+        <input type="password" id="signinPassword" placeholder="Enter your password" autocomplete="current-password">
+        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" aria-label="Show password">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="signin-forgot"><a href="#" onclick="event.preventDefault()">Forgot password?</a></div>
+      <button type="submit" class="signin-submit">Sign In</button>
+    </form>
+
+    <div class="signin-footer">
+      Don't have an account? <a href="#" onclick="event.preventDefault();closeSignIn();setTimeout(()=>openPage('signup'),350);">Create one free</a>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script type="module">
+  // ─── FIREBASE (Firestore) ───
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, limit }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // TODO: paste your Firebase web config here (Firebase Console → Project Settings → Your apps → Web)
+  const firebaseConfig = {
+    apiKey: "REPLACE_ME",
+    authDomain: "REPLACE_ME.firebaseapp.com",
+    projectId: "REPLACE_ME",
+    storageBucket: "REPLACE_ME.appspot.com",
+    messagingSenderId: "REPLACE_ME",
+    appId: "REPLACE_ME"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose helpers globally so non-module code (submitSignup/submitContact) can call them
+  window.HBdb = {
+    saveSignup: (data) => addDoc(collection(db, "signups"), { ...data, createdAt: serverTimestamp() }),
+    saveContact: (data) => addDoc(collection(db, "contacts"), { ...data, createdAt: serverTimestamp() }),
+    countSignups: async () => (await getDocs(collection(db, "signups"))).size,
+    recentSignups: async () => {
+      const q = query(collection(db, "signups"), orderBy("createdAt", "desc"), limit(5));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => d.data());
+    }
+  };
+  window.HBdb.refreshLiveCount = async () => {
+    try {
+      const n = await window.HBdb.countSignups();
+      const el = document.getElementById('liveSignupCount');
+      if (el) el.textContent = n.toLocaleString();
+    } catch (e) { /* offline / config not set */ }
+  };
+  window.addEventListener('DOMContentLoaded', () => window.HBdb.refreshLiveCount());
+  window.dispatchEvent(new Event("hb-firebase-ready"));
+</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="us-states-data.js"></script>
+<script src="city-data.js"></script>
+<script src="zip-prefixes.js"></script>
 <script>
 // ─── NAV SCROLL ───
 const navbar = document.getElementById('navbar');
@@ -1639,13 +2908,104 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ─── FILTER BUTTONS ───
+// ─── FILTER BUTTONS (Income / Rent / Score) ───
+let currentMapMode = 'income';
+
 document.querySelectorAll('.map-filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.map-filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    currentMapMode = btn.dataset.filter;
+    refreshMapMode();
   });
 });
+
+function refreshMapMode() {
+  // Rebuild state choropleth with new colors and popups
+  if (cachedGeoJSON) initStates(cachedGeoJSON);
+  // Recolor metro circles
+  renderMetros();
+  // Refresh listing markers with new labels/colors
+  updateListings();
+}
+
+// ─── STATE ABBREVIATIONS ───
+const stateAbbrev = {
+  "Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA",
+  "Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA",
+  "Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA",
+  "Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD",
+  "Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO",
+  "Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ",
+  "New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH",
+  "Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC",
+  "South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT",
+  "Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY"
+};
+
+// ─── REALTOR.COM HELPERS ───
+function realtorSearchUrl(city, state) {
+  const abbr = stateAbbrev[state] || state.replace(/\s+/g, '-');
+  const c = city.replace(/\s+/g, '-');
+  return 'https://www.realtor.com/realestateandhomes-search/' + c + '_' + abbr;
+}
+
+function realtorRentUrl(city, state) {
+  const abbr = stateAbbrev[state] || state.replace(/\s+/g, '-');
+  const c = city.replace(/\s+/g, '-');
+  return 'https://www.realtor.com/apartments/' + c + '_' + abbr;
+}
+
+function realtorAddressUrl(listing) {
+  const addr = (listing.address || '').replace(/[,#\.]/g, '').replace(/\s+/g, '-');
+  const zip = listing.zip || '';
+  return 'https://www.realtor.com/realestateandhomes-detail/' + addr + '_' + zip;
+}
+
+
+function updateToolbarLink(cityName, stateName) {
+  const btn = document.getElementById('realtorToolbarBtn');
+  if (cityName) {
+    btn.href = realtorSearchUrl(cityName, stateName || '');
+  }
+}
+
+// ─── PROPERTY IMAGES ───
+const propertyImages = [
+  'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1560440021-33f9b867899d?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=400&h=250&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=400&h=250&fit=crop&auto=format'
+];
+
+const propertyImagesLarge = propertyImages.map(u => u.replace('w=400&h=250', 'w=600&h=300'));
+
+function getPropertyImage(idx) {
+  return propertyImages[idx % propertyImages.length];
+}
+function getPropertyImageLarge(idx) {
+  return propertyImagesLarge[idx % propertyImagesLarge.length];
+}
 
 // ─── LEAFLET MAP ───
 const map = L.map('map', {
@@ -1661,197 +3021,323 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// ─── FULL CHOROPLETH GRID (covers entire US like Map AI) ───
-// Seeded random for consistent colors
-function seededRandom(seed) {
-  let s = seed;
-  return function() {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s - 1) / 2147483646;
+// ─── STATE AFFORDABILITY DATA ───
+// Source: Census ACS 2024, Zillow Observed Rent Index Q1 2026, HUD FMR 2026
+const stateData = {
+  "Alabama": { score: 0.25, avgRent: 975, listings: 15 },
+  "Alaska": { score: 0.55, avgRent: 1380, listings: 5 },
+  "Arizona": { score: 0.56, avgRent: 1475, listings: 22 },
+  "Arkansas": { score: 0.20, avgRent: 840, listings: 10 },
+  "California": { score: 0.88, avgRent: 2250, listings: 55 },
+  "Colorado": { score: 0.68, avgRent: 1725, listings: 18 },
+  "Connecticut": { score: 0.70, avgRent: 1580, listings: 12 },
+  "Delaware": { score: 0.52, avgRent: 1310, listings: 7 },
+  "Florida": { score: 0.66, avgRent: 1780, listings: 35 },
+  "Georgia": { score: 0.48, avgRent: 1380, listings: 20 },
+  "Hawaii": { score: 0.93, avgRent: 2450, listings: 6 },
+  "Idaho": { score: 0.50, avgRent: 1280, listings: 8 },
+  "Illinois": { score: 0.52, avgRent: 1310, listings: 24 },
+  "Indiana": { score: 0.30, avgRent: 1020, listings: 12 },
+  "Iowa": { score: 0.26, avgRent: 920, listings: 8 },
+  "Kansas": { score: 0.28, avgRent: 960, listings: 9 },
+  "Kentucky": { score: 0.27, avgRent: 940, listings: 10 },
+  "Louisiana": { score: 0.32, avgRent: 1030, listings: 11 },
+  "Maine": { score: 0.50, avgRent: 1290, listings: 7 },
+  "Maryland": { score: 0.70, avgRent: 1680, listings: 15 },
+  "Massachusetts": { score: 0.85, avgRent: 2280, listings: 18 },
+  "Michigan": { score: 0.35, avgRent: 1080, listings: 15 },
+  "Minnesota": { score: 0.46, avgRent: 1220, listings: 12 },
+  "Mississippi": { score: 0.18, avgRent: 850, listings: 8 },
+  "Missouri": { score: 0.32, avgRent: 1020, listings: 12 },
+  "Montana": { score: 0.48, avgRent: 1180, listings: 6 },
+  "Nebraska": { score: 0.30, avgRent: 1000, listings: 7 },
+  "Nevada": { score: 0.58, avgRent: 1480, listings: 12 },
+  "New Hampshire": { score: 0.60, avgRent: 1520, listings: 6 },
+  "New Jersey": { score: 0.78, avgRent: 1820, listings: 18 },
+  "New Mexico": { score: 0.36, avgRent: 1060, listings: 8 },
+  "New York": { score: 0.84, avgRent: 1920, listings: 42 },
+  "North Carolina": { score: 0.45, avgRent: 1280, listings: 18 },
+  "North Dakota": { score: 0.30, avgRent: 920, listings: 5 },
+  "Ohio": { score: 0.32, avgRent: 1010, listings: 18 },
+  "Oklahoma": { score: 0.24, avgRent: 910, listings: 9 },
+  "Oregon": { score: 0.64, avgRent: 1540, listings: 12 },
+  "Pennsylvania": { score: 0.48, avgRent: 1210, listings: 20 },
+  "Rhode Island": { score: 0.62, avgRent: 1480, listings: 6 },
+  "South Carolina": { score: 0.40, avgRent: 1220, listings: 12 },
+  "South Dakota": { score: 0.28, avgRent: 920, listings: 5 },
+  "Tennessee": { score: 0.44, avgRent: 1260, listings: 15 },
+  "Texas": { score: 0.48, avgRent: 1340, listings: 38 },
+  "Utah": { score: 0.56, avgRent: 1420, listings: 10 },
+  "Vermont": { score: 0.54, avgRent: 1380, listings: 5 },
+  "Virginia": { score: 0.58, avgRent: 1510, listings: 18 },
+  "Washington": { score: 0.72, avgRent: 1780, listings: 20 },
+  "West Virginia": { score: 0.16, avgRent: 810, listings: 6 },
+  "Wisconsin": { score: 0.36, avgRent: 1060, listings: 10 },
+  "Wyoming": { score: 0.34, avgRent: 980, listings: 5 }
+};
+
+function scoreToColor(score) {
+  if (score < 0.2) return '#15803d';
+  if (score < 0.3) return '#22c55e';
+  if (score < 0.4) return '#84cc16';
+  if (score < 0.5) return '#eab308';
+  if (score < 0.6) return '#f59e0b';
+  if (score < 0.7) return '#f97316';
+  if (score < 0.85) return '#ef4444';
+  return '#dc2626';
+}
+
+function scoreToLabel(score) {
+  if (score < 0.25) return 'Very Affordable';
+  if (score < 0.4) return 'Affordable';
+  if (score < 0.55) return 'Moderate';
+  if (score < 0.7) return 'Expensive';
+  return 'Very Expensive';
+}
+
+// ─── MODE-AWARE COLORS ───
+function rentToColor(rent) {
+  if (rent <= 850) return '#15803d';
+  if (rent <= 1000) return '#22c55e';
+  if (rent <= 1200) return '#84cc16';
+  if (rent <= 1400) return '#eab308';
+  if (rent <= 1600) return '#f59e0b';
+  if (rent <= 1900) return '#f97316';
+  if (rent <= 2200) return '#ef4444';
+  return '#dc2626';
+}
+
+function rentToLabel(rent) {
+  if (rent <= 900) return 'Very Affordable';
+  if (rent <= 1200) return 'Affordable';
+  if (rent <= 1500) return 'Moderate';
+  if (rent <= 1900) return 'Expensive';
+  return 'Very Expensive';
+}
+
+function incomeToColor(rent) {
+  const income = Math.round(rent / 0.3);
+  if (income <= 2800) return '#15803d';
+  if (income <= 3300) return '#22c55e';
+  if (income <= 4000) return '#84cc16';
+  if (income <= 4700) return '#eab308';
+  if (income <= 5300) return '#f59e0b';
+  if (income <= 6300) return '#f97316';
+  if (income <= 7300) return '#ef4444';
+  return '#dc2626';
+}
+
+function incomeToLabel(rent) {
+  const income = Math.round(rent / 0.3);
+  if (income <= 3000) return 'Low Income Needed';
+  if (income <= 4000) return 'Moderate Income';
+  if (income <= 5500) return 'Above Average Income';
+  if (income <= 7000) return 'High Income Needed';
+  return 'Very High Income';
+}
+
+function modeColor(data) {
+  if (currentMapMode === 'rent') return rentToColor(data.avgRent);
+  if (currentMapMode === 'score') return scoreToColor(data.score);
+  return incomeToColor(data.avgRent);
+}
+
+function modeLabel(data) {
+  if (currentMapMode === 'rent') return rentToLabel(data.avgRent);
+  if (currentMapMode === 'score') return scoreToLabel(data.score);
+  return incomeToLabel(data.avgRent);
+}
+
+function modeValue(data) {
+  if (currentMapMode === 'rent') return '$' + data.avgRent.toLocaleString() + '/mo';
+  if (currentMapMode === 'score') return Math.round((1 - data.score) * 100) + '/100';
+  return '$' + Math.round(data.avgRent / 0.3).toLocaleString() + '/mo';
+}
+
+function modeMetric() {
+  if (currentMapMode === 'rent') return 'Avg. Rent';
+  if (currentMapMode === 'score') return 'Affordability Score';
+  return 'Min. Income Needed';
+}
+
+function stateStyle(feature) {
+  const name = feature.properties.name;
+  const data = stateData[name] || { score: 0.45, avgRent: 1000 };
+  return {
+    fillColor: modeColor(data),
+    weight: 1.5,
+    opacity: 1,
+    color: '#fff',
+    fillOpacity: 0.55
   };
 }
 
-// Income data points for major metro influence (affects nearby grid cells)
-const metroInfluence = [
-  // [lat, lng, incomeLevel 0-1 where 0=low income, 1=high income, radius of influence]
-  // NYC
-  [40.76, -73.97, 0.95, 0.15],  // Midtown Manhattan - very high
-  [40.71, -74.01, 0.90, 0.10],  // Financial District
-  [40.78, -73.96, 0.92, 0.12],  // Upper East Side
-  [40.82, -73.92, 0.20, 0.12],  // South Bronx - low
-  [40.66, -73.88, 0.22, 0.14],  // East Brooklyn - low
-  [40.75, -73.88, 0.45, 0.10],  // Jackson Heights - mid
-  [40.58, -74.15, 0.55, 0.12],  // Staten Island
-  // LA
-  [34.07, -118.40, 0.95, 0.12],  // Beverly Hills
-  [34.02, -118.49, 0.85, 0.10],  // Santa Monica
-  [33.94, -118.28, 0.15, 0.16],  // South LA - low
-  [33.90, -118.22, 0.18, 0.12],  // Compton
-  [34.06, -118.30, 0.35, 0.08],  // Koreatown
-  [33.78, -118.20, 0.50, 0.12],  // Long Beach
-  [34.15, -118.14, 0.70, 0.10],  // Pasadena
-  // Chicago
-  [41.88, -87.63, 0.82, 0.10],  // Loop
-  [41.92, -87.65, 0.85, 0.08],  // Lincoln Park
-  [41.74, -87.62, 0.12, 0.16],  // South Side - low
-  [41.90, -87.72, 0.20, 0.10],  // Humboldt Park
-  [42.05, -87.69, 0.65, 0.08],  // Evanston
-  // Houston
-  [29.76, -95.43, 0.95, 0.10],  // River Oaks
-  [29.72, -95.36, 0.15, 0.12],  // Third Ward
-  [29.71, -95.58, 0.22, 0.14],  // Alief
-  [29.80, -95.40, 0.60, 0.10],  // Heights
-  // Atlanta
-  [33.84, -84.37, 0.90, 0.10],  // Buckhead
-  [33.68, -84.44, 0.20, 0.12],  // East Point
-  [33.78, -84.39, 0.55, 0.08],  // Midtown
-  [33.95, -84.55, 0.50, 0.10],  // Marietta
-  // Phoenix
-  [33.50, -111.90, 0.85, 0.14],  // Scottsdale
-  [33.38, -112.08, 0.18, 0.14],  // South Phoenix
-  [33.50, -112.20, 0.22, 0.10],  // Maryvale
-  [33.42, -111.94, 0.50, 0.10],  // Tempe
-  // Miami
-  [25.82, -80.13, 0.88, 0.10],  // Miami Beach
-  [25.77, -80.23, 0.25, 0.08],  // Little Havana
-  [25.87, -80.30, 0.30, 0.10],  // Hialeah
-  [26.12, -80.14, 0.60, 0.10],  // Fort Lauderdale
-  // Seattle
-  [47.62, -122.20, 0.90, 0.12],  // Bellevue
-  [47.63, -122.32, 0.70, 0.06],  // Capitol Hill
-  [47.51, -122.35, 0.30, 0.08],  // White Center
-  [47.25, -122.44, 0.40, 0.12],  // Tacoma
-  // Denver
-  [39.72, -104.95, 0.85, 0.08],  // Cherry Creek
-  [39.78, -104.84, 0.35, 0.10],  // Montbello
-  [39.73, -104.80, 0.40, 0.10],  // Aurora
-  // Detroit
-  [42.35, -83.05, 0.15, 0.16],  // Detroit core - low
-  [42.47, -83.24, 0.45, 0.10],  // Southfield
-  [42.33, -83.18, 0.50, 0.08],  // Dearborn
-  // Dallas
-  [32.83, -96.80, 0.92, 0.08],  // Highland Park
-  [32.72, -96.78, 0.18, 0.12],  // South Dallas
-  [32.75, -97.33, 0.45, 0.14],  // Fort Worth
-  // SF Bay
-  [37.79, -122.40, 0.90, 0.08],  // Financial District
-  [37.80, -122.27, 0.40, 0.10],  // Oakland
-  [37.44, -122.16, 0.95, 0.10],  // Palo Alto
-  // DC
-  [38.91, -77.06, 0.92, 0.08],  // Georgetown
-  [38.86, -76.98, 0.28, 0.10],  // SE DC
-  [39.00, -77.03, 0.55, 0.08],  // Silver Spring
-  // Philly
-  [39.95, -75.17, 0.65, 0.08],  // Center City
-  [39.99, -75.14, 0.22, 0.10],  // North Philly
-  // Boston
-  [42.36, -71.06, 0.80, 0.08],  // Downtown
-  [42.35, -71.08, 0.75, 0.06],  // Back Bay
-  [42.32, -71.07, 0.30, 0.08],  // Dorchester
-  // General US fill - rural/suburban baseline
-  [38.0, -97.0, 0.45, 8.0],     // Central US baseline
-  [43.0, -89.0, 0.50, 4.0],     // Midwest
-  [35.0, -80.0, 0.42, 4.0],     // Southeast
-  [36.0, -115.0, 0.48, 3.0],    // Southwest
-  [45.0, -93.0, 0.52, 3.0],     // Upper Midwest
-  [30.0, -90.0, 0.32, 3.0],     // Deep South
-  [40.0, -75.0, 0.55, 2.0],     // Mid-Atlantic
-  [47.0, -120.0, 0.50, 3.0],    // Pacific NW
-  [34.0, -118.0, 0.45, 2.0],    // SoCal
-];
+// ─── STATE GEOJSON ───
+let stateLayer;
+let hoveredLayer = null;
+let cachedGeoJSON = null;
 
-function getIncomeLevel(lat, lng) {
-  let totalWeight = 0;
-  let weightedSum = 0;
-  metroInfluence.forEach(([mLat, mLng, income, radius]) => {
-    const dist = Math.sqrt(Math.pow(lat - mLat, 2) + Math.pow((lng - mLng) * 0.75, 2));
-    if (dist < radius * 2.5) {
-      const weight = Math.pow(Math.max(0, 1 - dist / (radius * 2.5)), 2);
-      totalWeight += weight;
-      weightedSum += weight * income;
-    }
-  });
-  if (totalWeight === 0) return 0.45;
-  return weightedSum / totalWeight;
+function buildStatePopup(name, data) {
+  const color = modeColor(data);
+  const income = Math.round(data.avgRent / 0.3);
+  return `
+    <div class="popup-content">
+      <h3>${name}</h3>
+      <div style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:650;background:${color}18;color:${color};margin-bottom:12px;">${modeLabel(data)}</div>
+      <div class="popup-row">
+        <span class="popup-label">${modeMetric()}</span>
+        <span class="popup-value" style="color:${color};">${modeValue(data)}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-label">${currentMapMode === 'rent' ? 'Min. Income Needed' : 'Avg. Rent'}</span>
+        <span class="popup-value">${currentMapMode === 'rent' ? '$' + income.toLocaleString() + '/mo' : '$' + data.avgRent.toLocaleString() + '/mo'}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-label">${currentMapMode === 'score' ? 'Avg. Rent' : 'Affordability Score'}</span>
+        <span class="popup-value">${currentMapMode === 'score' ? '$' + data.avgRent.toLocaleString() + '/mo' : Math.round((1 - data.score) * 100) + '/100'}</span>
+      </div>
+      <div class="popup-row">
+        <span class="popup-label">Available Listings</span>
+        <span class="popup-value">${data.listings}</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;">
+        <button onclick="map.fitBounds(stateLayer.getLayers().find(l=>l.feature.properties.name==='${name}').getBounds().pad(0.1));map.closePopup();" style="flex:1;padding:10px;border:none;border-radius:100px;background:#059669;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;">Explore ${name}</button>
+        <a href="${realtorSearchUrl(name, '')}" target="_blank" rel="noopener noreferrer" style="padding:10px 14px;border:none;border-radius:100px;background:#d92228;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">Listings</a>
+      </div>
+    </div>
+  `;
 }
 
-function incomeToColor(level) {
-  // Green (affordable/low income) -> Yellow (moderate) -> Orange -> Red (high income/expensive)
-  if (level < 0.25) return { fill: '#15803d', opacity: 0.42 };       // deep green - very affordable
-  if (level < 0.35) return { fill: '#22c55e', opacity: 0.38 };       // green - affordable
-  if (level < 0.45) return { fill: '#84cc16', opacity: 0.34 };       // lime - moderate-affordable
-  if (level < 0.55) return { fill: '#eab308', opacity: 0.32 };       // yellow - moderate
-  if (level < 0.65) return { fill: '#f59e0b', opacity: 0.34 };       // amber - moderate-expensive
-  if (level < 0.75) return { fill: '#f97316', opacity: 0.38 };       // orange - expensive
-  if (level < 0.85) return { fill: '#ef4444', opacity: 0.42 };       // red - very expensive
-  return { fill: '#dc2626', opacity: 0.48 };                          // deep red - extremely expensive
+function initStates(geojson) {
+    cachedGeoJSON = geojson;
+    if (stateLayer) { map.removeLayer(stateLayer); }
+    stateLayer = L.geoJSON(geojson, {
+      style: stateStyle,
+      onEachFeature: function(feature, layer) {
+        const name = feature.properties.name;
+        const data = stateData[name] || { score: 0.45, avgRent: 1000, listings: 0 };
+        layer.bindPopup(buildStatePopup(name, data), { maxWidth: 320 });
+        layer.on({
+          mouseover: function(e) {
+            const l = e.target;
+            l.setStyle({ weight: 3, color: '#059669', fillOpacity: 0.7 });
+            l.bringToFront();
+            hoveredLayer = l;
+          },
+          mouseout: function(e) {
+            stateLayer.resetStyle(e.target);
+            hoveredLayer = null;
+          }
+        });
+      }
+    }).addTo(map);
 }
 
-// Generate grid cells covering the continental US
-const gridLayer = L.layerGroup().addTo(map);
+initStates(usStatesGeoJSON);
 
-function renderGrid() {
-  gridLayer.clearLayers();
+// ─── COMPOSITE SCORE SYSTEM ───
+const scoreWeights = { affordability: 0.30, safety: 0.20, schools: 0.20, transit: 0.15, walkability: 0.10, parks: 0.05 };
+
+function compositeScore(scores) {
+  return Math.round(Object.entries(scoreWeights).reduce((sum, [k, w]) => sum + ((scores[k] || 0) * w), 0));
+}
+
+function scoreClass(val) {
+  if (val >= 70) return 'score-high';
+  if (val >= 45) return 'score-mid';
+  return 'score-low';
+}
+
+function scoreBarColor(val) {
+  if (val >= 70) return '#22c55e';
+  if (val >= 45) return '#eab308';
+  return '#ef4444';
+}
+
+const typeColors = {
+  "Section 8": "#059669", "LIHTC": "#7c3aed", "Income-Restricted": "#2563eb",
+  "Market Rate": "#6b7280", "Public Housing": "#d97706",
+  "NYCHA": "#d97706", "CHA": "#d97706", "SHA": "#d97706", "HACLA": "#d97706",
+  "SFHA": "#d97706", "DCHA": "#d97706", "BHA": "#d97706", "PHA": "#d97706"
+};
+
+// ─── METRO AREA CIRCLES (visible at zoom 6+) ───
+const metroLayer = L.layerGroup();
+
+function renderMetros() {
+  metroLayer.clearLayers();
+  if (map.getZoom() < 6) return;
   const bounds = map.getBounds();
-  const zoom = map.getZoom();
-
-  // Cell size adapts to zoom level
-  let cellSize;
-  if (zoom <= 4) cellSize = 1.0;
-  else if (zoom <= 5) cellSize = 0.5;
-  else if (zoom <= 6) cellSize = 0.25;
-  else if (zoom <= 7) cellSize = 0.15;
-  else if (zoom <= 8) cellSize = 0.08;
-  else if (zoom <= 9) cellSize = 0.05;
-  else if (zoom <= 10) cellSize = 0.03;
-  else if (zoom <= 11) cellSize = 0.018;
-  else if (zoom <= 12) cellSize = 0.01;
-  else cellSize = 0.006;
-
-  // Limit to continental US bounds
-  const minLat = Math.max(24.5, bounds.getSouth());
-  const maxLat = Math.min(49.5, bounds.getNorth());
-  const minLng = Math.max(-125, bounds.getWest());
-  const maxLng = Math.min(-66, bounds.getEast());
-
-  // Cap max cells for performance
-  const maxCells = 2500;
-  const estCols = Math.ceil((maxLng - minLng) / cellSize);
-  const estRows = Math.ceil((maxLat - minLat) / cellSize);
-  if (estCols * estRows > maxCells) {
-    cellSize = Math.sqrt((maxLng - minLng) * (maxLat - minLat) / maxCells);
-  }
-
-  const startLat = Math.floor(minLat / cellSize) * cellSize;
-  const startLng = Math.floor(minLng / cellSize) * cellSize;
-
-  for (let lat = startLat; lat < maxLat; lat += cellSize) {
-    for (let lng = startLng; lng < maxLng; lng += cellSize) {
-      const centerLat = lat + cellSize / 2;
-      const centerLng = lng + cellSize / 2;
-
-      // Add slight variation with seeded random
-      const seed = Math.round((centerLat * 1000 + centerLng * 100) * 7);
-      const rng = seededRandom(seed);
-      const variation = (rng() - 0.5) * 0.12;
-
-      const income = Math.max(0, Math.min(1, getIncomeLevel(centerLat, centerLng) + variation));
-      const color = incomeToColor(income);
-
-      const rect = L.rectangle(
-        [[lat, lng], [lat + cellSize, lng + cellSize]],
-        { color: 'transparent', fillColor: color.fill, fillOpacity: color.opacity, weight: 0, interactive: false }
-      );
-      gridLayer.addLayer(rect);
-    }
-  }
+  metroAreas.forEach(metro => {
+    if (!bounds.contains(metro.coords)) return;
+    const metroData = { score: metro.score, avgRent: metro.avgRent, listings: 0 };
+    const color = modeColor(metroData);
+    const circle = L.circle(metro.coords, {
+      radius: metro.r,
+      fillColor: color,
+      fillOpacity: 0.45,
+      color: color,
+      weight: 2,
+      opacity: 0.7
+    });
+    circle.on('click', function() {
+      map.closePopup();
+      openPanel(metro.name);
+    });
+    const income = Math.round(metro.avgRent / 0.3);
+    circle.bindPopup(`
+      <div class="popup-content">
+        <h3>${metro.name}</h3>
+        <div style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:650;background:${color}18;color:${color};margin-bottom:12px;">${modeLabel(metroData)}</div>
+        <div class="popup-row">
+          <span class="popup-label">${modeMetric()}</span>
+          <span class="popup-value" style="color:${color};">${modeValue(metroData)}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">${currentMapMode === 'rent' ? 'Min. Income Needed' : 'Avg. Rent'}</span>
+          <span class="popup-value">${currentMapMode === 'rent' ? '$' + income.toLocaleString() + '/mo' : '$' + metro.avgRent.toLocaleString() + '/mo'}</span>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button onclick="map.closePopup();openPanel('${metro.name.replace(/'/g, "\\'")}');" style="flex:1;padding:10px;border:none;border-radius:100px;background:#059669;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;">View Properties</button>
+          <a href="${realtorSearchUrl(metro.name, '')}" target="_blank" rel="noopener noreferrer" style="padding:10px 14px;border:none;border-radius:100px;background:#d92228;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;">Listings</a>
+        </div>
+      </div>
+    `, { maxWidth: 320 });
+    metroLayer.addLayer(circle);
+  });
 }
 
-renderGrid();
-map.on('moveend', renderGrid);
+metroLayer.addTo(map);
+renderMetros();
+map.on('moveend', renderMetros);
 
-// ─── CUSTOM MARKER ICONS (housing listings on top) ───
-function createIcon(color, price) {
+// ─── CUSTOM MARKER ICONS ───
+function createIcon(color, label, highlighted) {
+  if (highlighted) {
+    return L.divIcon({
+      className: 'custom-marker highlighted-marker',
+      html: `<div style="
+        background:${color};
+        color:#fff;
+        padding:7px 14px;
+        border-radius:24px;
+        font-family:var(--font-body);
+        font-size:14px;
+        font-weight:700;
+        white-space:nowrap;
+        box-shadow:0 0 0 4px rgba(5,150,105,0.35), 0 4px 16px rgba(0,0,0,0.35);
+        border:3px solid #ecfdf5;
+        cursor:pointer;
+        text-align:center;
+        line-height:1.3;
+        position:relative;
+        z-index:800;
+        animation: markerPulse 2s ease-in-out infinite;
+      ">${label}</div>`,
+      iconSize: [0, 0],
+      iconAnchor: [40, 18]
+    });
+  }
   return L.divIcon({
     className: 'custom-marker',
     html: `<div style="
@@ -1868,7 +3354,7 @@ function createIcon(color, price) {
       cursor:pointer;
       text-align:center;
       line-height:1.3;
-    ">$${price.toLocaleString()}</div>`,
+    ">${label}</div>`,
     iconSize: [0, 0],
     iconAnchor: [35, 16]
   });
@@ -1881,117 +3367,208 @@ const priceColor = (rent) => {
   return '#0284c7';
 };
 
-// ─── HOUSING LISTINGS ───
-const listings = [
-  // NYC
-  { name: "Melrose Commons Apartments", address: "345 E 154th St, Bronx, NY", coords: [40.8205, -73.9185], rent: 850, beds: 1, type: "LIHTC", sqft: 550 },
-  { name: "East Harlem Center", address: "2253 3rd Ave, New York, NY", coords: [40.7948, -73.9388], rent: 975, beds: 2, type: "Section 8", sqft: 720 },
-  { name: "Prospect Plaza", address: "1785 Prospect Pl, Brooklyn, NY", coords: [40.6734, -73.9144], rent: 1100, beds: 2, type: "NYCHA", sqft: 780 },
-  { name: "Marcus Garvey Village", address: "1440 E New York Ave, Brooklyn, NY", coords: [40.6614, -73.9125], rent: 900, beds: 1, type: "Section 8", sqft: 580 },
-  { name: "Jackson Heights Co-op", address: "34-20 78th St, Queens, NY", coords: [40.7505, -73.8877], rent: 1250, beds: 2, type: "Income-Restricted", sqft: 800 },
-  { name: "Astoria Houses", address: "4-20 Astoria Blvd, Queens, NY", coords: [40.7712, -73.9238], rent: 780, beds: 1, type: "NYCHA", sqft: 520 },
-  { name: "Lafayette Gardens", address: "250 DeKalb Ave, Brooklyn, NY", coords: [40.6891, -73.9762], rent: 1050, beds: 2, type: "LIHTC", sqft: 740 },
-  { name: "Morrisania Air Rights", address: "3440 Third Ave, Bronx, NY", coords: [40.8295, -73.9054], rent: 920, beds: 1, type: "Section 8", sqft: 560 },
-  // LA
-  { name: "Jordan Downs Phase 1", address: "2100 E 103rd St, Los Angeles, CA", coords: [33.9421, -118.2467], rent: 750, beds: 2, type: "Section 8", sqft: 820 },
-  { name: "Pueblo Del Sol", address: "1300 N Vignes St, Los Angeles, CA", coords: [34.0610, -118.2295], rent: 1100, beds: 2, type: "LIHTC", sqft: 850 },
-  { name: "Imperial Courts", address: "11541 Croesus Ave, Los Angeles, CA", coords: [33.9265, -118.2445], rent: 620, beds: 2, type: "Section 8", sqft: 680 },
-  { name: "Vermont Manchester Apts", address: "8500 S Vermont Ave, Los Angeles, CA", coords: [33.9560, -118.2915], rent: 950, beds: 1, type: "LIHTC", sqft: 580 },
-  { name: "Compton Creek Village", address: "825 S Willowbrook Ave, Compton, CA", coords: [33.8925, -118.2360], rent: 880, beds: 2, type: "LIHTC", sqft: 760 },
-  { name: "East LA Family Apts", address: "4726 E Whittier Blvd, Los Angeles, CA", coords: [34.0232, -118.1580], rent: 950, beds: 3, type: "Section 8", sqft: 980 },
-  { name: "Inglewood Villas", address: "220 E Nutwood St, Inglewood, CA", coords: [33.9555, -118.3480], rent: 1100, beds: 2, type: "LIHTC", sqft: 790 },
-  // Chicago
-  { name: "Oakwood Shores", address: "3815 S Lake Park Ave, Chicago, IL", coords: [41.8240, -87.6050], rent: 750, beds: 2, type: "Section 8", sqft: 820 },
-  { name: "Humboldt Park Residences", address: "3213 W North Ave, Chicago, IL", coords: [41.9100, -87.7080], rent: 900, beds: 2, type: "Income-Restricted", sqft: 750 },
-  { name: "Pilsen Family Housing", address: "1830 S Racine Ave, Chicago, IL", coords: [41.8568, -87.6565], rent: 820, beds: 2, type: "LIHTC", sqft: 700 },
-  { name: "Englewood Square", address: "815 W 63rd St, Chicago, IL", coords: [41.7798, -87.6400], rent: 680, beds: 1, type: "Section 8", sqft: 520 },
-  { name: "Lawndale Restoration", address: "3600 W Roosevelt Rd, Chicago, IL", coords: [41.8660, -87.7165], rent: 780, beds: 3, type: "Section 8", sqft: 950 },
-  // Houston
-  { name: "Cuney Homes", address: "3260 Truxillo St, Houston, TX", coords: [29.7178, -95.3540], rent: 550, beds: 2, type: "Section 8", sqft: 750 },
-  { name: "Sharpstown Terrace", address: "7100 Bellerive Dr, Houston, TX", coords: [29.6870, -95.5350], rent: 780, beds: 2, type: "LIHTC", sqft: 820 },
-  { name: "Alief Oaks Apartments", address: "11575 Bellaire Blvd, Houston, TX", coords: [29.7050, -95.5825], rent: 750, beds: 2, type: "LIHTC", sqft: 800 },
-  { name: "Palm Center Homes", address: "5300 Griggs Rd, Houston, TX", coords: [29.7050, -95.3380], rent: 650, beds: 1, type: "Section 8", sqft: 520 },
-  // Atlanta
-  { name: "Ashley Courts at Cascade", address: "505 Fairburn Rd SW, Atlanta, GA", coords: [33.7175, -84.4720], rent: 850, beds: 2, type: "LIHTC", sqft: 820 },
-  { name: "East Point Village", address: "3055 Washington Rd, East Point, GA", coords: [33.6655, -84.4455], rent: 780, beds: 2, type: "Income-Restricted", sqft: 750 },
-  { name: "Collegetown at West End", address: "862 Oak St SW, Atlanta, GA", coords: [33.7365, -84.4125], rent: 900, beds: 1, type: "LIHTC", sqft: 580 },
-  // Phoenix
-  { name: "South Mountain Family", address: "8035 S Central Ave, Phoenix, AZ", coords: [33.3765, -112.0730], rent: 650, beds: 2, type: "Section 8", sqft: 780 },
-  { name: "Maryvale Terrace", address: "4840 W Indian School Rd, Phoenix, AZ", coords: [33.4945, -112.1640], rent: 750, beds: 2, type: "LIHTC", sqft: 800 },
-  { name: "Garfield Commons", address: "1534 E Washington St, Phoenix, AZ", coords: [33.4483, -112.0445], rent: 700, beds: 1, type: "Section 8", sqft: 500 },
-  // Miami
-  { name: "Brisas del Rio", address: "1420 NW 7th St, Miami, FL", coords: [25.7755, -80.2170], rent: 850, beds: 2, type: "LIHTC", sqft: 750 },
-  { name: "Homestead Gardens", address: "30 NW 5th Ave, Homestead, FL", coords: [25.4685, -80.4790], rent: 750, beds: 2, type: "Section 8", sqft: 780 },
-  { name: "Liberty Square Rising", address: "1455 NW 65th St, Miami, FL", coords: [25.8305, -80.2245], rent: 720, beds: 2, type: "Section 8", sqft: 700 },
-  // Seattle
-  { name: "Rainier Vista", address: "2800 S Oregon St, Seattle, WA", coords: [47.5445, -122.2950], rent: 1050, beds: 2, type: "Section 8", sqft: 820 },
-  { name: "Yesler Terrace", address: "882 Yesler Way, Seattle, WA", coords: [47.6015, -122.3220], rent: 950, beds: 1, type: "SHA", sqft: 580 },
-  { name: "Tacoma Hillside Terrace", address: "2500 S G St, Tacoma, WA", coords: [47.2415, -122.4440], rent: 780, beds: 2, type: "Section 8", sqft: 760 },
-  // Denver
-  { name: "Sun Valley EcoDistrict", address: "1100 Decatur St, Denver, CO", coords: [39.7315, -105.0095], rent: 850, beds: 2, type: "LIHTC", sqft: 780 },
-  { name: "Montbello Family Apts", address: "4745 Kittredge St, Denver, CO", coords: [39.7820, -104.8280], rent: 780, beds: 2, type: "Section 8", sqft: 740 },
-  // Detroit
-  { name: "Gardenview Estates", address: "9255 Van Dyke St, Detroit, MI", coords: [42.3870, -83.0225], rent: 550, beds: 2, type: "Section 8", sqft: 780 },
-  { name: "Elmwood Park Plaza", address: "500 Chene St, Detroit, MI", coords: [42.3465, -83.0290], rent: 600, beds: 1, type: "Section 8", sqft: 500 },
-  // Dallas
-  { name: "Turner Courts", address: "1410 Gallagher St, Dallas, TX", coords: [32.7540, -96.7485], rent: 580, beds: 2, type: "Section 8", sqft: 720 },
-  { name: "Fort Worth Heritage", address: "916 E Hattie St, Fort Worth, TX", coords: [32.7585, -97.3190], rent: 750, beds: 2, type: "Income-Restricted", sqft: 760 },
-  { name: "South Dallas Heritage", address: "4100 S Lancaster Rd, Dallas, TX", coords: [32.7145, -96.7735], rent: 650, beds: 1, type: "Section 8", sqft: 500 },
-  // SF
-  { name: "Hunters View Phase 2", address: "227 West Point Rd, San Francisco, CA", coords: [37.7330, -122.3815], rent: 1050, beds: 2, type: "SFHA", sqft: 780 },
-  { name: "Oakland Family Housing", address: "1430 Alice St, Oakland, CA", coords: [37.7985, -122.2650], rent: 980, beds: 2, type: "Section 8", sqft: 720 },
-  // DC
-  { name: "Barry Farm Redevelopment", address: "1252 Sumner Rd SE, Washington, DC", coords: [38.8575, -76.9870], rent: 850, beds: 2, type: "Section 8", sqft: 780 },
-  { name: "Greenleaf Gardens", address: "203 N St SW, Washington, DC", coords: [38.8765, -77.0175], rent: 720, beds: 2, type: "DCHA", sqft: 700 },
-  // Philly
-  { name: "Norris Apartments", address: "2101 N 11th St, Philadelphia, PA", coords: [39.9800, -75.1510], rent: 750, beds: 2, type: "Section 8", sqft: 740 },
-  { name: "Bartram Village", address: "2500 Wanamaker St, Philadelphia, PA", coords: [39.9305, -75.2230], rent: 650, beds: 2, type: "PHA", sqft: 720 },
-  // Boston
-  { name: "Whittier Street Apts", address: "75 Whittier St, Boston, MA", coords: [42.3350, -71.0835], rent: 950, beds: 2, type: "Section 8", sqft: 720 },
-  { name: "Dorchester Crossing", address: "770 Dudley St, Boston, MA", coords: [42.3165, -71.0725], rent: 1050, beds: 2, type: "LIHTC", sqft: 800 },
-];
+function markerLabel(listing) {
+  const cs = listing.scores ? compositeScore(listing.scores) : 50;
+  if (currentMapMode === 'score') return cs + '/100';
+  if (currentMapMode === 'income') return '$' + Math.round(listing.rent / 0.3).toLocaleString();
+  return '$' + listing.rent.toLocaleString();
+}
 
-// Only show listing markers when zoomed in enough
+function markerColor(listing) {
+  if (currentMapMode === 'score') {
+    const cs = listing.scores ? compositeScore(listing.scores) : 50;
+    return scoreBarColor(cs);
+  }
+  if (currentMapMode === 'income') return incomeToColor(listing.rent);
+  return priceColor(listing.rent);
+}
+
+// ─── BUDGET & FILTERS ───
+let activeFilters = { maxRent: null, minBeds: null, minBaths: null, type: null, minScore: null, amenities: [], downPayment: null };
+
+function parseCurrency(str) {
+  if (!str) return null;
+  const n = parseFloat(str.replace(/[^0-9.]/g, ''));
+  return isNaN(n) ? null : n;
+}
+
+function formatCurrency(n) {
+  return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function toggleBudgetBar() {
+  const bar = document.getElementById('budgetBar');
+  const btn = document.getElementById('budgetToggle');
+  bar.classList.toggle('open');
+  btn.classList.toggle('active');
+}
+
+// 30% rule: auto-calc max affordable rent from income
+document.getElementById('budgetIncome').addEventListener('input', function() {
+  const income = parseCurrency(this.value);
+  const affordEl = document.getElementById('affordAmount');
+  const maxRentInput = document.getElementById('budgetMaxRent');
+  if (income && income > 0) {
+    const affordable = Math.round(income * 0.30);
+    affordEl.innerHTML = '<strong>' + formatCurrency(affordable) + '</strong> /mo (30% rule)';
+    if (!maxRentInput.value) maxRentInput.value = formatCurrency(affordable);
+  } else {
+    affordEl.textContent = 'Enter income above';
+  }
+});
+
+// Amenity tag toggle
+document.querySelectorAll('.amenity-tag').forEach(tag => {
+  tag.addEventListener('click', function() {
+    this.classList.toggle('active');
+  });
+});
+
+function getFilteredListings(source) {
+  let results = source || listings;
+
+  if (activeFilters.maxRent) {
+    results = results.filter(l => l.rent <= activeFilters.maxRent);
+  }
+  if (activeFilters.minBeds) {
+    results = results.filter(l => l.beds >= activeFilters.minBeds);
+  }
+  if (activeFilters.minBaths) {
+    results = results.filter(l => (l.baths || 1) >= activeFilters.minBaths);
+  }
+  if (activeFilters.type) {
+    results = results.filter(l => l.type === activeFilters.type);
+  }
+  if (activeFilters.minScore) {
+    results = results.filter(l => compositeScore(l.scores || {}) >= activeFilters.minScore);
+  }
+  if (activeFilters.amenities.length > 0) {
+    results = results.filter(l => {
+      const feats = (l.features || []).map(f => f.toLowerCase());
+      return activeFilters.amenities.every(a => feats.some(f => f.includes(a.toLowerCase())));
+    });
+  }
+  return results;
+}
+
+function applyFilters() {
+  const maxRent = parseCurrency(document.getElementById('budgetMaxRent').value);
+  const minBeds = parseCurrency(document.getElementById('filterBeds').value);
+  const minBaths = parseCurrency(document.getElementById('filterBaths').value);
+  const type = document.getElementById('filterType').value || null;
+  const minScore = parseCurrency(document.getElementById('filterMinScore').value);
+  const amenities = [];
+  document.querySelectorAll('.amenity-tag.active').forEach(t => amenities.push(t.dataset.amenity));
+
+  activeFilters = { maxRent, minBeds, minBaths, type, minScore, amenities };
+
+  const matched = getFilteredListings();
+  const total = matched.length;
+  document.getElementById('budgetMatchCount').innerHTML = '<strong>' + total + '</strong> properties match your filters';
+
+  // Auto-zoom map to show all matching properties
+  if (total > 0 && hasActiveFilters()) {
+    const latlngs = matched.map(l => l.coords);
+    const bounds = L.latLngBounds(latlngs);
+    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+  }
+
+  updateListings();
+
+  // If panel is open, re-filter it too
+  if (document.getElementById('propertyPanel').classList.contains('open')) {
+    const cityName = currentPanelCity;
+    if (cityName && cityName !== 'Nearby') {
+      currentPanelListings = getFilteredListings(listings.filter(l => l.city === cityName));
+    } else {
+      const mapBounds = map.getBounds();
+      currentPanelListings = getFilteredListings(listings.filter(l => mapBounds.contains(l.coords)));
+    }
+    document.getElementById('panelCount').textContent = currentPanelListings.length + ' properties';
+    sortPanel();
+  }
+}
+
+function resetFilters() {
+  activeFilters = { maxRent: null, minBeds: null, minBaths: null, type: null, minScore: null, amenities: [] };
+  document.getElementById('budgetIncome').value = '';
+  document.getElementById('budgetMaxRent').value = '';
+  document.getElementById('budgetDownPayment').value = '';
+  document.getElementById('filterBeds').value = '';
+  document.getElementById('filterBaths').value = '';
+  document.getElementById('filterType').value = '';
+  document.getElementById('filterMinScore').value = '';
+  document.getElementById('affordAmount').textContent = 'Enter income above';
+  document.querySelectorAll('.amenity-tag.active').forEach(t => t.classList.remove('active'));
+  document.getElementById('budgetMatchCount').innerHTML = '';
+  map.flyTo([39.8283, -98.5795], 5, { duration: 1 });
+  updateListings();
+}
+
+// ─── HOUSING LISTINGS ───
 const listingMarkers = L.layerGroup();
+let filtersAreActive = false;
+
+function hasActiveFilters() {
+  return activeFilters.maxRent || activeFilters.minBeds || activeFilters.minBaths || activeFilters.type || activeFilters.minScore || activeFilters.amenities.length > 0;
+}
 
 function updateListings() {
   listingMarkers.clearLayers();
-  if (map.getZoom() >= 9) {
+  filtersAreActive = hasActiveFilters();
+  const minZoom = filtersAreActive ? 4 : 7;
+  if (map.getZoom() >= minZoom) {
     const bounds = map.getBounds();
-    listings.forEach(listing => {
-      if (bounds.contains(listing.coords)) {
-        const icon = createIcon(priceColor(listing.rent), listing.rent);
-        const marker = L.marker(listing.coords, { icon });
-        const typeColors = {
-          "Section 8": "#059669", "LIHTC": "#7c3aed", "Income-Restricted": "#2563eb",
-          "NYCHA": "#d97706", "CHA": "#d97706", "SHA": "#d97706", "HACLA": "#d97706",
-          "SFHA": "#d97706", "DCHA": "#d97706", "BHA": "#d97706", "PHA": "#d97706"
-        };
-        const tc = typeColors[listing.type] || "#6b7280";
-        marker.bindPopup(`
-          <div class="popup-content">
-            <h3>${listing.name}</h3>
-            <div style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:650;background:${tc}18;color:${tc};margin-bottom:12px;">${listing.type}</div>
-            <div style="font-size:13px;color:#8a8070;margin-bottom:14px;line-height:1.5;">${listing.address}</div>
-            <div class="popup-row">
-              <span class="popup-label">Monthly Rent</span>
-              <span class="popup-value" style="color:#059669;">$${listing.rent.toLocaleString()}/mo</span>
-            </div>
-            <div class="popup-row">
-              <span class="popup-label">Bedrooms</span>
-              <span class="popup-value">${listing.beds} BR</span>
-            </div>
-            <div class="popup-row">
-              <span class="popup-label">Size</span>
-              <span class="popup-value">${listing.sqft.toLocaleString()} sq ft</span>
-            </div>
-            <div style="margin-top:14px;">
-              <button style="width:100%;padding:10px;border:none;border-radius:100px;background:#059669;color:#fff;font-family:var(--font-body);font-size:13.5px;font-weight:550;cursor:pointer;">View Details</button>
-            </div>
+    const visible = getFilteredListings(listings.filter(l => bounds.contains(l.coords)));
+    visible.slice(0, 100).forEach((listing, idx) => {
+      const cs = listing.scores ? compositeScore(listing.scores) : 50;
+      const icon = createIcon(markerColor(listing), markerLabel(listing), filtersAreActive);
+      const marker = L.marker(listing.coords, { icon, zIndexOffset: filtersAreActive ? 1000 : 0 });
+      const tc = typeColors[listing.type] || "#6b7280";
+      const sc = scoreClass(cs);
+      marker.on('click', function() {
+        openPanel(listing.city || null, listing);
+      });
+      const listingGlobalIdx = listings.indexOf(listing);
+      const thumbUrl = getPropertyImage(listingGlobalIdx);
+      marker.bindPopup(`
+        <div style="margin:-13px -20px 0;border-radius:10px 10px 0 0;overflow:hidden;">
+          <img src="${thumbUrl}" alt="${listing.name}" style="width:100%;height:130px;object-fit:cover;display:block;" onerror="this.style.display='none'">
+        </div>
+        <div class="popup-content">
+          <h3>${listing.name}</h3>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+            <div style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:650;background:${tc}18;color:${tc};">${listing.type}</div>
+            <div class="score-badge ${sc}">${cs}/100</div>
           </div>
-        `, { maxWidth: 300 });
-        listingMarkers.addLayer(marker);
-      }
+          <div style="font-size:13px;color:#8a8070;margin-bottom:14px;line-height:1.5;">${listing.address}</div>
+          ${currentMapMode === 'income' ? `<div class="popup-row">
+            <span class="popup-label">Min. Income Needed</span>
+            <span class="popup-value" style="color:${markerColor(listing)};">$${Math.round(listing.rent / 0.3).toLocaleString()}/mo</span>
+          </div>` : ''}
+          <div class="popup-row">
+            <span class="popup-label">Monthly Rent</span>
+            <span class="popup-value" style="color:#059669;">$${listing.rent.toLocaleString()}/mo</span>
+          </div>
+          ${currentMapMode === 'score' ? `<div class="popup-row">
+            <span class="popup-label">Livability Score</span>
+            <span class="popup-value" style="color:${scoreBarColor(cs)};">${cs}/100</span>
+          </div>` : ''}
+          <div class="popup-row">
+            <span class="popup-label">Bedrooms</span>
+            <span class="popup-value">${listing.beds} BR${listing.baths ? ' / ' + listing.baths + ' BA' : ''}</span>
+          </div>
+          <div class="popup-row">
+            <span class="popup-label">Size</span>
+            <span class="popup-value">${listing.sqft.toLocaleString()} sq ft</span>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:8px;">
+            <button onclick="map.closePopup();openDetailModal(${listingGlobalIdx});" style="flex:1;padding:10px;border:none;border-radius:100px;background:#059669;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;">View Details</button>
+            <a href="${realtorAddressUrl(listing)}" target="_blank" rel="noopener noreferrer" style="padding:10px 14px;border:none;border-radius:100px;background:#d92228;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:550;cursor:pointer;text-decoration:none;">View Listing</a>
+          </div>
+        </div>
+      `, { maxWidth: 300 });
+      listingMarkers.addLayer(marker);
     });
   }
 }
@@ -2000,33 +3577,578 @@ listingMarkers.addTo(map);
 updateListings();
 map.on('moveend', updateListings);
 
+// ─── PROPERTY SIDE PANEL ───
+let currentPanelCity = null;
+let currentPanelListings = [];
+
+function openPanel(cityName, highlightListing) {
+  const panel = document.getElementById('propertyPanel');
+  const title = document.getElementById('panelTitle');
+  const count = document.getElementById('panelCount');
+  const rLink = document.getElementById('panelRealtorLink');
+
+  if (cityName) {
+    currentPanelCity = cityName;
+    currentPanelListings = getFilteredListings(listings.filter(l => l.city === cityName));
+    const firstListing = currentPanelListings[0] || listings.find(l => l.city === cityName);
+    const stateName = firstListing ? firstListing.state : '';
+    rLink.href = realtorRentUrl(cityName, stateName);
+    updateToolbarLink(cityName, stateName);
+  } else {
+    currentPanelCity = 'Nearby';
+    const bounds = map.getBounds();
+    currentPanelListings = getFilteredListings(listings.filter(l => bounds.contains(l.coords)));
+    rLink.href = 'https://www.realtor.com/apartments/';
+  }
+
+  title.textContent = currentPanelCity;
+  count.textContent = currentPanelListings.length + ' properties';
+
+  sortPanel();
+  panel.classList.add('open');
+
+  if (highlightListing) {
+    setTimeout(() => {
+      const idx = currentPanelListings.indexOf(highlightListing);
+      if (idx >= 0) {
+        const card = document.querySelector(`[data-listing-idx="${listings.indexOf(highlightListing)}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 400);
+  }
+}
+
+function closePanel() {
+  document.getElementById('propertyPanel').classList.remove('open');
+}
+
+function sortPanel() {
+  const sortBy = document.getElementById('panelSort').value;
+  const sorted = [...currentPanelListings];
+  switch (sortBy) {
+    case 'score':
+      sorted.sort((a, b) => compositeScore(b.scores || {}) - compositeScore(a.scores || {}));
+      break;
+    case 'rent-asc':
+      sorted.sort((a, b) => a.rent - b.rent);
+      break;
+    case 'rent-desc':
+      sorted.sort((a, b) => b.rent - a.rent);
+      break;
+    case 'beds':
+      sorted.sort((a, b) => b.beds - a.beds);
+      break;
+  }
+  renderPanelCards(sorted);
+}
+
+function renderPanelCards(sortedListings) {
+  const container = document.getElementById('panelCards');
+  if (sortedListings.length === 0) {
+    container.innerHTML = '<div class="panel-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d5cfc5" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><p style="margin-top:12px;">No properties found in this area.</p><a href="' + realtorRentUrl(currentPanelCity, '') + '" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;color:#d92228;font-weight:600;text-decoration:underline;">Search on Realtor.com</a></div>';
+    return;
+  }
+  container.innerHTML = sortedListings.map(listing => {
+    const idx = listings.indexOf(listing);
+    const cs = listing.scores ? compositeScore(listing.scores) : 50;
+    const tc = typeColors[listing.type] || "#6b7280";
+    const sc = scoreClass(cs);
+    const imgUrl = getPropertyImage(idx);
+    return `
+      <div class="property-card" data-listing-idx="${idx}" onclick="openDetailModal(${idx})">
+        <img class="property-card-img" src="${imgUrl}" alt="${listing.name}" loading="lazy" onerror="this.style.display='none'">
+        <div class="property-card-body">
+          <div class="property-card-type" style="background:${tc}15;color:${tc};">${listing.type}</div>
+          <div class="property-card-name">${listing.name}</div>
+          <div class="property-card-address">${listing.address}</div>
+          <div class="property-card-stats">
+            <div class="property-card-stat"><strong>${listing.beds}</strong>Beds</div>
+            <div class="property-card-stat"><strong>${listing.baths || 1}</strong>Baths</div>
+            <div class="property-card-stat"><strong>${listing.sqft.toLocaleString()}</strong>Sq Ft</div>
+          </div>
+          <div class="property-card-bottom">
+            <div class="property-card-price">$${listing.rent.toLocaleString()}<span>/mo</span></div>
+            <div class="score-badge ${sc}">${cs}/100</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── PROPERTY DETAIL MODAL ───
+function openDetailModal(listingIdx) {
+  const listing = listings[listingIdx];
+  if (!listing) return;
+  const modal = document.getElementById('propertyModal');
+  const headerBar = document.getElementById('modalHeaderBar');
+  const body = document.getElementById('modalBody');
+  const tc = typeColors[listing.type] || "#6b7280";
+  const cs = listing.scores ? compositeScore(listing.scores) : 50;
+  const sc = scoreClass(cs);
+  const headerColors = ['#059669','#7c3aed','#2563eb','#d97706','#0d9488','#dc2626','#4f46e5'];
+  const hc = headerColors[listingIdx % headerColors.length];
+
+  headerBar.style.display = 'none';
+
+  const imgUrl = getPropertyImageLarge(listingIdx);
+  const scoreLabels = { affordability: 'Affordability', safety: 'Safety', schools: 'Schools', transit: 'Transit', walkability: 'Walkability', parks: 'Parks & Green' };
+  const scores = listing.scores || { affordability: 50, safety: 50, schools: 50, transit: 50, walkability: 50, parks: 50 };
+
+  const scoreBarsHTML = Object.entries(scoreLabels).map(([key, label]) => {
+    const val = scores[key] || 0;
+    return `
+      <div class="score-bar-row">
+        <span class="score-bar-label">${label}</span>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${val}%;background:${scoreBarColor(val)};"></div></div>
+        <span class="score-bar-value">${val}</span>
+      </div>
+    `;
+  }).join('');
+
+  const featuresHTML = (listing.features || []).map(f => `<span class="modal-feature">${f}</span>`).join('');
+  const realtorUrl = realtorAddressUrl(listing);
+
+  body.innerHTML = `
+    <img class="modal-hero-img" src="${imgUrl}" alt="${listing.name}" onerror="this.style.display='none'">
+    <div style="padding:28px;">
+    <h2>${listing.name}</h2>
+    <div class="modal-address">${listing.address}</div>
+    <div class="modal-tags">
+      <div class="modal-tag" style="background:${tc}15;color:${tc};font-weight:650;">${listing.type}</div>
+      <div class="score-badge ${sc}" style="font-size:13px;">${cs}/100 Overall Score</div>
+      ${listing.waitlist ? '<div class="modal-tag" style="background:#fef3c7;color:#92400e;">Waitlist</div>' : '<div class="modal-tag" style="background:#dcfce7;color:#166534;">Available</div>'}
+    </div>
+    <div class="modal-stats-grid">
+      <div class="modal-stat">
+        <div class="modal-stat-value" style="color:#059669;">$${listing.rent.toLocaleString()}</div>
+        <div class="modal-stat-label">Monthly Rent</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-value">${listing.beds} / ${listing.baths || 1}</div>
+        <div class="modal-stat-label">Beds / Baths</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-value">${listing.sqft.toLocaleString()}</div>
+        <div class="modal-stat-label">Sq Ft</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-value">${listing.yearBuilt || '\u2014'}</div>
+        <div class="modal-stat-label">Year Built</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <h4>Score Breakdown</h4>
+      ${scoreBarsHTML}
+    </div>
+    ${featuresHTML ? '<div class="score-section"><h4>Amenities</h4><div class="modal-features">' + featuresHTML + '</div></div>' : ''}
+    <div class="modal-contact">
+      <a class="modal-contact-btn realtor" href="${realtorUrl}" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View This Listing on Realtor.com
+      </a>
+      <button class="modal-contact-btn secondary" onclick="map.flyTo([${listing.coords}], 15, {duration:1});closeModal();">View on Map</button>
+    </div>
+    <div style="margin-top:12px;">
+      <a href="${realtorSearchUrl(listing.city || '', listing.state || '')}" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;font-size:13px;color:#d92228;font-weight:550;text-decoration:none;">Browse homes for sale in ${listing.city || 'this area'} &rarr;</a>
+    </div>
+    </div>
+  `;
+
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('propertyModal').classList.remove('open');
+}
+
+document.getElementById('propertyModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
 // ─── SEARCH ───
-const cityCoords = {
-  "new york": [40.75, -73.95, 12], "nyc": [40.75, -73.95, 12],
-  "manhattan": [40.76, -73.97, 13], "brooklyn": [40.68, -73.94, 13],
-  "bronx": [40.82, -73.92, 13], "queens": [40.73, -73.87, 12],
-  "los angeles": [34.0, -118.3, 11], "la": [34.0, -118.3, 11],
-  "chicago": [41.88, -87.65, 12], "houston": [29.74, -95.45, 11],
-  "atlanta": [33.76, -84.40, 12], "phoenix": [33.45, -112.07, 11],
-  "miami": [25.79, -80.21, 11], "seattle": [47.57, -122.30, 12],
-  "denver": [39.74, -104.88, 12], "detroit": [42.35, -83.08, 12],
-  "san francisco": [37.77, -122.42, 12], "sf": [37.77, -122.42, 12],
-  "oakland": [37.80, -122.27, 13], "boston": [42.36, -71.06, 13],
-  "dallas": [32.78, -96.80, 11], "fort worth": [32.75, -97.33, 12],
-  "philadelphia": [39.95, -75.17, 13], "washington dc": [38.90, -77.03, 12],
-  "dc": [38.90, -77.03, 12], "tacoma": [47.25, -122.44, 13],
-  "san jose": [37.34, -121.89, 12],
+const cityCoords = {};
+metroAreas.forEach(m => {
+  cityCoords[m.name.toLowerCase()] = [m.coords[0], m.coords[1], 11];
+});
+const aliases = {
+  "nyc": "new york city", "la": "los angeles", "sf": "san francisco",
+  "dc": "washington dc", "philly": "philadelphia", "atl": "atlanta",
+  "chi": "chicago", "det": "detroit", "bos": "boston", "sea": "seattle"
 };
+Object.entries(aliases).forEach(([alias, city]) => {
+  const match = metroAreas.find(m => m.name.toLowerCase() === city);
+  if (match) cityCoords[alias] = [match.coords[0], match.coords[1], 11];
+});
 
 document.getElementById('searchInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') {
-    const query = this.value.toLowerCase().trim();
+    const query = this.value.trim().toLowerCase();
+    if (!query) return;
+
     if (cityCoords[query]) {
       const [lat, lng, zoom] = cityCoords[query];
       map.flyTo([lat, lng], zoom, { duration: 1.5 });
+      const metro = metroAreas.find(m => m.name.toLowerCase() === query);
+      if (metro) setTimeout(() => openPanel(metro.name), 1600);
+      return;
+    }
+
+    if (/^\d{5}$/.test(query) && typeof zipPrefixes !== 'undefined') {
+      const prefix = query.substring(0, 3);
+      if (zipPrefixes[prefix]) {
+        const [lat, lng, zoom] = zipPrefixes[prefix];
+        map.flyTo([lat, lng], zoom || 11, { duration: 1.5 });
+        return;
+      }
+    }
+
+    if (/^\d{3}$/.test(query) && typeof zipPrefixes !== 'undefined') {
+      if (zipPrefixes[query]) {
+        const [lat, lng, zoom] = zipPrefixes[query];
+        map.flyTo([lat, lng], zoom || 10, { duration: 1.5 });
+        return;
+      }
+    }
+
+    const partial = Object.keys(cityCoords).find(k => k.includes(query));
+    if (partial) {
+      const [lat, lng, zoom] = cityCoords[partial];
+      map.flyTo([lat, lng], zoom, { duration: 1.5 });
+      const metro = metroAreas.find(m => m.name.toLowerCase() === partial);
+      if (metro) setTimeout(() => openPanel(metro.name), 1600);
+      return;
     }
   }
 });
+
+// ─── PRICING HANDLERS ───
+function handlePricing(tier) {
+  if (tier === 'free') {
+    document.querySelector('#map-section').scrollIntoView({ behavior: 'smooth' });
+  } else if (tier === 'pro') {
+    openPage('signup');
+  } else if (tier === 'enterprise') {
+    openPage('contact');
+  }
+}
+
+// ─── PAGE MODAL SYSTEM ───
+const pageContent = {
+  about: {
+    title: 'About HomeBase',
+    body: `
+      <h3>Our Mission</h3>
+      <p>HomeBase was founded with a simple belief: everyone deserves access to transparent, data-driven housing information. Too often, finding affordable housing means navigating a maze of outdated listings, unclear pricing, and hidden costs.</p>
+      <p>We built HomeBase to change that. By combining data from the U.S. Census Bureau, HUD, and real estate platforms like Realtor.com, we give renters and homebuyers a clear picture of what housing actually costs in every neighborhood across America.</p>
+      <h3>What We Do</h3>
+      <p>Our interactive map covers 380+ metro areas with 50+ data indicators including income levels, rent prices, school ratings, safety scores, transit access, and walkability. Whether you're a first-time renter, a family looking to relocate, or a housing counselor helping clients, HomeBase gives you the tools to make informed decisions.</p>
+      <h3>Our Team</h3>
+      <p>We're a small, passionate team of engineers, data scientists, and housing advocates based across the United States. We believe that housing affordability is one of the most important issues of our time, and we're committed to building tools that make a real difference.</p>
+    `
+  },
+  contact: {
+    title: 'Contact Us',
+    body: `
+      <p>Have a question, suggestion, or partnership inquiry? We'd love to hear from you.</p>
+      <div class="contact-form">
+        <input type="text" placeholder="Your name" id="contactName">
+        <input type="email" placeholder="Email address" id="contactEmail">
+        <input type="text" placeholder="Subject" id="contactSubject">
+        <textarea placeholder="Your message..." id="contactMessage"></textarea>
+        <button onclick="submitContact()">Send Message</button>
+      </div>
+      <p style="margin-top:24px;font-size:13px;color:var(--sand-600);">You can also reach us directly at <a href="mailto:hello@homebase.com">hello@homebase.com</a></p>
+    `
+  },
+  privacy: {
+    title: 'Privacy Policy',
+    body: `
+      <p><em>Last updated: March 2026</em></p>
+      <h3>Information We Collect</h3>
+      <p>HomeBase collects minimal personal information. When you create an account, we store your email address and display name. When you use the map, we may collect anonymized usage data to improve our service.</p>
+      <h3>How We Use Your Information</h3>
+      <ul>
+        <li>To provide and maintain our service</li>
+        <li>To send you saved search alerts (Pro users)</li>
+        <li>To improve our affordability algorithms</li>
+        <li>To respond to support requests</li>
+      </ul>
+      <h3>Data Sources</h3>
+      <p>Housing data displayed on HomeBase is sourced from public government databases (Census Bureau, HUD, BLS) and third-party real estate platforms. We do not sell your personal data to third parties.</p>
+      <h3>Cookies</h3>
+      <p>We use essential cookies to keep you logged in and remember your preferences. We do not use tracking cookies or sell data to advertisers.</p>
+      <h3>Your Rights</h3>
+      <p>You can request deletion of your account and all associated data at any time by contacting us at <a href="mailto:privacy@homebase.com">privacy@homebase.com</a>.</p>
+    `
+  },
+  terms: {
+    title: 'Terms of Service',
+    body: `
+      <p><em>Last updated: March 2026</em></p>
+      <h3>Acceptance of Terms</h3>
+      <p>By accessing or using HomeBase, you agree to be bound by these Terms of Service. If you do not agree, please do not use our service.</p>
+      <h3>Use of Service</h3>
+      <p>HomeBase provides housing affordability data and tools for informational purposes. While we strive for accuracy, housing data changes frequently and we cannot guarantee that all information is current or complete.</p>
+      <h3>User Accounts</h3>
+      <p>You are responsible for maintaining the security of your account credentials. You may not share your Pro subscription with others or use automated tools to scrape our data.</p>
+      <h3>Disclaimer</h3>
+      <p>HomeBase is not a real estate broker, lender, or housing authority. Our affordability scores and neighborhood data are for informational purposes only and should not be the sole basis for housing decisions. Always verify listings and pricing directly with property managers or owners.</p>
+      <h3>Limitation of Liability</h3>
+      <p>HomeBase is provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of the service or reliance on the data provided.</p>
+    `
+  },
+  blog: {
+    title: 'Blog',
+    body: `
+      <h3>Understanding the 30% Rule</h3>
+      <p style="font-size:13px;color:var(--sand-600);margin-bottom:8px;">March 15, 2026</p>
+      <p>The widely-cited "30% rule" suggests spending no more than 30% of your gross income on housing. But is this outdated advice? We break down when this rule works, when it doesn't, and how to calculate what you can actually afford.</p>
+      <hr style="border:none;border-top:1px solid var(--sand-200);margin:24px 0;">
+      <h3>Top 10 Most Affordable Metro Areas in 2026</h3>
+      <p style="font-size:13px;color:var(--sand-600);margin-bottom:8px;">March 8, 2026</p>
+      <p>From the Midwest to the Southeast, we analyzed data across 380+ metro areas to find where your dollar stretches the furthest. Spoiler: several cities offer median rents under $800/month with strong livability scores.</p>
+      <hr style="border:none;border-top:1px solid var(--sand-200);margin:24px 0;">
+      <h3>How to Navigate Section 8 Housing</h3>
+      <p style="font-size:13px;color:var(--sand-600);margin-bottom:8px;">February 28, 2026</p>
+      <p>The Housing Choice Voucher Program (Section 8) can be a lifeline for low-income renters, but the application process is notoriously complex. Here's a step-by-step guide to applying, what to expect, and how HomeBase can help you find participating properties.</p>
+    `
+  },
+  datasources: {
+    title: 'Data Sources',
+    body: `
+      <p>HomeBase aggregates data from multiple authoritative sources to provide accurate, comprehensive housing insights.</p>
+      <h3>Government Sources</h3>
+      <ul>
+        <li><strong>U.S. Census Bureau</strong> — Median household income, demographics, population data (updated annually)</li>
+        <li><strong>HUD (Dept. of Housing & Urban Development)</strong> — Fair Market Rents, income limits, Section 8 data</li>
+        <li><strong>Bureau of Labor Statistics</strong> — Cost of living indices, employment data</li>
+        <li><strong>FBI UCR</strong> — Crime statistics for safety scores</li>
+        <li><strong>National Center for Education Statistics</strong> — School ratings and performance data</li>
+        <li><strong>EPA</strong> — Environmental quality indicators</li>
+      </ul>
+      <h3>Real Estate Platforms</h3>
+      <ul>
+        <li><strong>Realtor.com</strong> — Real-time home listings, rental prices, and market trends</li>
+        <li><strong>State & Local Housing Authorities</strong> — Subsidized housing inventories</li>
+      </ul>
+      <h3>Livability Data</h3>
+      <ul>
+        <li><strong>Walk Score</strong> — Walkability and transit accessibility</li>
+        <li><strong>OpenStreetMap</strong> — Parks, amenities, and points of interest</li>
+        <li><strong>GTFS Transit Data</strong> — Public transportation coverage</li>
+      </ul>
+    `
+  },
+  guide: {
+    title: 'Housing Guide',
+    body: `
+      <h3>First-Time Renter Checklist</h3>
+      <ul>
+        <li>Calculate your budget using the 30% rule (monthly income &times; 0.30)</li>
+        <li>Factor in utilities, renter's insurance, and commuting costs</li>
+        <li>Research neighborhoods using HomeBase's livability scores</li>
+        <li>Check for income-restricted or subsidized options in your area</li>
+        <li>Visit properties in person before signing a lease</li>
+        <li>Read the full lease agreement — ask about fees, maintenance, and renewal terms</li>
+      </ul>
+      <h3>Understanding Housing Types</h3>
+      <ul>
+        <li><strong>Market Rate</strong> — Standard rental pricing set by the landlord</li>
+        <li><strong>Income-Restricted</strong> — Rent capped based on area median income (AMI)</li>
+        <li><strong>Section 8 / HCV</strong> — Voucher-based program where tenants pay ~30% of income</li>
+        <li><strong>LIHTC</strong> — Low Income Housing Tax Credit properties with reduced rents</li>
+        <li><strong>Public Housing</strong> — Government-owned properties managed by local housing authorities</li>
+      </ul>
+      <h3>Tips for Saving on Housing</h3>
+      <ul>
+        <li>Consider neighborhoods just outside the city center — often 20-40% cheaper</li>
+        <li>Look for move-in specials and negotiate lease terms</li>
+        <li>Get a roommate to split costs on a larger unit</li>
+        <li>Use HomeBase to compare affordability across multiple neighborhoods before deciding</li>
+      </ul>
+    `
+  },
+  signup: {
+    title: 'Start Your Free Trial',
+    body: `
+      <p>Get 14 days of Pro access free — no credit card required. Explore all 50+ data layers, unlimited neighborhood lookups, and PDF reports.</p>
+      <div class="contact-form">
+        <input type="text" placeholder="Full name" id="signupName">
+        <input type="email" placeholder="Email address" id="signupEmail">
+        <input type="password" placeholder="Create a password" id="signupPassword">
+        <button onclick="submitSignup()">Start Free Trial</button>
+      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--sand-600);">By signing up, you agree to our <a href="#" onclick="event.preventDefault();closePage();setTimeout(()=>openPage('terms'),350);">Terms of Service</a> and <a href="#" onclick="event.preventDefault();closePage();setTimeout(()=>openPage('privacy'),350);">Privacy Policy</a>.</p>
+    `
+  }
+};
+
+function openPage(page) {
+  const content = pageContent[page];
+  if (!content) return;
+  document.getElementById('pageModalTitle').textContent = content.title;
+  document.getElementById('pageModalBody').innerHTML = content.body;
+  document.getElementById('pageModal').classList.add('open');
+}
+
+function closePage() {
+  document.getElementById('pageModal').classList.remove('open');
+}
+
+async function submitContact() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const subject = document.getElementById('contactSubject').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  if (!name || !email) {
+    document.getElementById('contactName').style.borderColor = name ? '' : '#ef4444';
+    document.getElementById('contactEmail').style.borderColor = email ? '' : '#ef4444';
+    return;
+  }
+  const formEl = document.querySelector('.contact-form');
+  formEl.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--sand-600);">Saving…</div>';
+  try {
+    const ref = await window.HBdb.saveContact({ name, email, subject, message });
+    formEl.innerHTML = `
+      <div style="text-align:center;padding:24px 0;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <p style="margin-top:16px;font-size:17px;font-weight:600;color:var(--ink);">Message sent!</p>
+        <div style="margin:18px auto 0;max-width:380px;text-align:left;background:var(--sand-100);border:1px solid var(--sand-200);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--ink);">
+          <div><strong>From:</strong> ${name} &lt;${email}&gt;</div>
+          ${subject ? `<div><strong>Subject:</strong> ${subject}</div>` : ''}
+          ${message ? `<div style="margin-top:6px;"><strong>Message:</strong> ${message}</div>` : ''}
+          <div style="margin-top:8px;font-size:11px;color:var(--sand-600);">Saved to database · ID ${ref.id.slice(0,8)}</div>
+        </div>
+      </div>`;
+  } catch (err) {
+    formEl.innerHTML = `<div style="text-align:center;padding:24px 0;color:#ef4444;">Couldn't save: ${err.message}</div>`;
+  }
+}
+
+async function submitSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pass = document.getElementById('signupPassword').value.trim();
+  if (!name || !email || !pass) {
+    document.getElementById('signupName').style.borderColor = name ? '' : '#ef4444';
+    document.getElementById('signupEmail').style.borderColor = email ? '' : '#ef4444';
+    document.getElementById('signupPassword').style.borderColor = pass ? '' : '#ef4444';
+    return;
+  }
+  const formEl = document.querySelector('.contact-form');
+  formEl.innerHTML = '<div style="text-align:center;padding:24px 0;color:var(--sand-600);">Creating your account…</div>';
+  try {
+    // NOTE: do NOT store raw passwords in production. For demo only — store a hash placeholder.
+    const ref = await window.HBdb.saveSignup({ name, email, plan: 'free-trial' });
+    const total = await window.HBdb.countSignups();
+    formEl.innerHTML = `
+      <div style="text-align:center;padding:24px 0;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <p style="margin-top:16px;font-size:17px;font-weight:600;color:var(--ink);">Welcome to HomeBase Pro, ${name.split(' ')[0]}!</p>
+        <div style="margin:18px auto 0;max-width:380px;text-align:left;background:var(--sand-100);border:1px solid var(--sand-200);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--ink);">
+          <div><strong>Name:</strong> ${name}</div>
+          <div><strong>Email:</strong> ${email}</div>
+          <div><strong>Plan:</strong> 14-day Pro trial</div>
+          <div style="margin-top:8px;font-size:11px;color:var(--sand-600);">Saved to database · ID ${ref.id.slice(0,8)} · You're member #${total}</div>
+        </div>
+      </div>`;
+    window.HBdb.refreshLiveCount();
+    setTimeout(() => { closePage(); document.querySelector('#map-section').scrollIntoView({ behavior: 'smooth' }); }, 3200);
+  } catch (err) {
+    formEl.innerHTML = `<div style="text-align:center;padding:24px 0;color:#ef4444;">Couldn't create account: ${err.message}</div>`;
+  }
+}
+
+// ─── SIGN IN ───
+function openSignIn() {
+  document.getElementById('signinOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('signinEmail').focus(), 100);
+}
+
+function closeSignIn() {
+  document.getElementById('signinOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  // Reset form state
+  document.getElementById('signinForm').reset();
+  document.querySelectorAll('.signin-field input').forEach(i => i.classList.remove('error'));
+  // Restore card if it was replaced by success
+  const card = document.getElementById('signinCard');
+  if (card.dataset.success) {
+    location.reload();
+  }
+}
+
+function togglePasswordVisibility() {
+  const pw = document.getElementById('signinPassword');
+  const icon = document.getElementById('eyeIcon');
+  if (pw.type === 'password') {
+    pw.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    pw.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
+function handleSignIn(e) {
+  e.preventDefault();
+  const email = document.getElementById('signinEmail');
+  const pass = document.getElementById('signinPassword');
+  let valid = true;
+
+  email.classList.remove('error');
+  pass.classList.remove('error');
+
+  if (!email.value.trim() || !email.value.includes('@')) {
+    email.classList.add('error');
+    valid = false;
+  }
+  if (!pass.value.trim()) {
+    pass.classList.add('error');
+    valid = false;
+  }
+  if (!valid) return;
+
+  showSignInSuccess(email.value.trim());
+}
+
+function handleGoogleSignIn() {
+  showSignInSuccess('Google User');
+}
+
+function showSignInSuccess(name) {
+  const card = document.getElementById('signinCard');
+  card.dataset.success = '1';
+  card.innerHTML = `
+    <button class="signin-close" onclick="closeSignIn()" aria-label="Close">&times;</button>
+    <div class="signin-success">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-500)" stroke-width="2" stroke-linecap="round">
+        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h3>Welcome to HomeBase!</h3>
+      <p>Signed in as ${name.includes('@') ? name : name}. Redirecting to the map...</p>
+    </div>
+  `;
+  setTimeout(() => {
+    closeSignIn();
+    document.querySelector('#map-section').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => location.reload(), 400);
+  }, 2000);
+}
+
+// ─── KEYBOARD SHORTCUTS ───
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeModal();
+    closePage();
+    closePanel();
+    closeSignIn();
+  }
+});
 </script>
+
 </body>
 </html>
